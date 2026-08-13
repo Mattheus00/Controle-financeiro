@@ -41,14 +41,29 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith("/reset-password") ||
     pathname.startsWith("/auth");
 
-  if (!userId && !isAuthRoute && pathname !== "/") {
+  const isPublicAsset =
+    pathname === "/icon" ||
+    pathname.startsWith("/icon/") ||
+    pathname === "/apple-icon" ||
+    pathname === "/manifest.webmanifest";
+
+  const isPublicRoute =
+    pathname === "/" ||
+    pathname === "/privacy" ||
+    pathname === "/privacidade" ||
+    pathname === "/terms" ||
+    pathname === "/termos" ||
+    isAuthRoute ||
+    isPublicAsset;
+
+  if (!userId && !isPublicRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("next", pathname);
     return NextResponse.redirect(url);
   }
 
-  if (userId && (pathname === "/login" || pathname === "/signup" || pathname === "/")) {
+  if (userId && (pathname === "/login" || pathname === "/signup")) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);

@@ -13,6 +13,37 @@ Regras:
 - Se um campo não estiver claro, use null.
 - Nunca invente CNPJ ou valor.`;
 
+export function buildOcrRequestBody(input: { mimeType: string; dataUrl: string }) {
+  const isPdf = input.mimeType === "application/pdf";
+  const content: Array<Record<string, unknown>> = [
+    {
+      type: "text",
+      text: "Extraia os dados deste comprovante, nota fiscal, recibo, boleto ou fatura.",
+    },
+  ];
+  if (isPdf) {
+    content.push({
+      type: "file",
+      file: { filename: "comprovante.pdf", file_data: input.dataUrl },
+    });
+  } else {
+    content.push({
+      type: "image_url",
+      image_url: { url: input.dataUrl },
+    });
+  }
+  return {
+    model: process.env.OPENAI_VISION_MODEL ?? "gpt-4o-mini",
+    temperature: 0,
+    store: false,
+    response_format: { type: "json_object" as const },
+    messages: [
+      { role: "system", content: SYSTEM_PROMPT },
+      { role: "user", content },
+    ],
+  };
+}
+
 export class ReceiptProcessor {
   constructor(private readonly apiKey = process.env.OPENAI_API_KEY) {}
 
@@ -21,27 +52,8 @@ export class ReceiptProcessor {
       throw new Error("OCR_UNAVAILABLE");
     }
 
-    const isPdf = input.mimeType === "application/pdf";
     const dataUrl = `data:${input.mimeType};base64,${input.buffer.toString("base64")}`;
-
-    const content: Array<Record<string, unknown>> = [
-      {
-        type: "text",
-        text: "Extraia os dados deste comprovante, nota fiscal, recibo, boleto ou fatura.",
-      },
-    ];
-
-    if (isPdf) {
-      content.push({
-        type: "file",
-        file: { filename: "comprovante.pdf", file_data: dataUrl },
-      });
-    } else {
-      content.push({
-        type: "image_url",
-        image_url: { url: dataUrl },
-      });
-    }
+    const body = buildOcrRequestBody({ mimeType: input.mimeType, dataUrl });
 
     const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -49,15 +61,7 @@ export class ReceiptProcessor {
         Authorization: `Bearer ${this.apiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        model: process.env.OPENAI_VISION_MODEL ?? "gpt-4o-mini",
-        temperature: 0,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: SYSTEM_PROMPT },
-          { role: "user", content },
-        ],
-      }),
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {

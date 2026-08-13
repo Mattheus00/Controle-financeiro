@@ -1,12 +1,11 @@
 import sharp from "sharp";
 import {
-  ALLOWED_RECEIPT_MIME_TYPES,
   MAX_UPLOAD_BYTES,
   RECEIPT_RATE_LIMIT_MAX,
   RECEIPT_RATE_LIMIT_WINDOW_MS,
 } from "@/lib/config";
 import { fail, ok } from "@/lib/errors";
-import { reaisToCents } from "@/lib/money";
+import { sniffReceiptMime } from "@/lib/privacy/sniff-file";
 import { ReceiptProcessor } from "@/services/receipt-processor";
 import { transactionService } from "@/services/transaction-service";
 import type { ReceiptExtraction } from "@/types";
@@ -15,15 +14,13 @@ import type { Database } from "@/types/database";
 
 type Client = SupabaseClient<Database>;
 
-const MIME_SET = new Set<string>(ALLOWED_RECEIPT_MIME_TYPES);
-
 export const receiptService = {
   async processUpload(
     supabase: Client,
     userId: string,
     file: File,
   ) {
-    if (!MIME_SET.has(file.type) || file.size > MAX_UPLOAD_BYTES) {
+    if (file.size > MAX_UPLOAD_BYTES) {
       return fail("UPLOAD_INVALID", "Arquivo inválido. Use JPEG, PNG, WEBP ou PDF de até 10 MB.");
     }
 
@@ -42,7 +39,11 @@ export const receiptService = {
     }
 
     const original = Buffer.from(await file.arrayBuffer());
-    const processed = await prepareFile(original, file.type);
+    const sniffed = sniffReceiptMime(original);
+    if (!sniffed) {
+      return fail("UPLOAD_INVALID", "Arquivo inválido. Use JPEG, PNG, WEBP ou PDF de até 10 MB.");
+    }
+    const processed = await prepareFile(original, sniffed);
     const ext = processed.mimeType === "application/pdf" ? "pdf" : "jpg";
     const objectId = crypto.randomUUID();
     const storagePath = `${userId}/pending/${objectId}.${ext}`;
@@ -152,7 +153,14 @@ export const receiptService = {
 
     if (!created.success) return created;
 
-    const finalPath = `${userId}/${created.data.id}/${scan.storage_path.split("/").pop()}`;
+    const filename = scan.storage_path.split("/").pop() ?? "comprovante";
+    const folder = scan.storage_path.split("/").slice(0, -1).join("/");
+    const { data: listed } = await supabase.storage.from("receipts").list(folder);
+    const stored = listed?.find((item) => item.name === filename);
+    const sizeBytes = Math.max(Number(stored?.metadata?.size ?? 1), 1);
+    const mimeType = filename.endsWith(".pdf") ? "application/pdf" : "image/jpeg";
+
+    const finalPath = `${userId}/${created.data.id}/${filename}`;
     await supabase.storage.from("receipts").move(scan.storage_path, finalPath);
 
     const { data: attachment } = await supabase
@@ -161,8 +169,8 @@ export const receiptService = {
         user_id: userId,
         transaction_id: created.data.id,
         storage_path: finalPath,
-        mime_type: finalPath.endsWith(".pdf") ? "application/pdf" : "image/jpeg",
-        size_bytes: 1,
+        mime_type: mimeType,
+        size_bytes: sizeBytes,
         original_name: "comprovante",
       })
       .select()

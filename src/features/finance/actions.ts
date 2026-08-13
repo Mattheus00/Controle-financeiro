@@ -6,6 +6,7 @@ import { fail } from "@/lib/errors";
 import { parseBRLToCents } from "@/lib/money";
 import { monthStartISO } from "@/lib/date";
 import { transactionSchema, quickExpenseSchema } from "@/validations/transaction";
+import { resourceIdSchema } from "@/validations/privacy";
 import { billSchema, recurringSchema } from "@/validations/bill";
 import {
   accountSchema,
@@ -103,8 +104,10 @@ export async function createQuickExpenseAction(formData: FormData) {
 }
 
 export async function deleteTransactionAction(id: string) {
+  const parsed = resourceIdSchema.safeParse(id);
+  if (!parsed.success) return fail("VALIDATION_ERROR", "Transação inválida.");
   const { supabase, userId } = await requireUser();
-  const result = await transactionService.remove(supabase, userId, id);
+  const result = await transactionService.remove(supabase, userId, parsed.data);
   if (result.success) revalidateFinance();
   return result;
 }
@@ -127,8 +130,10 @@ export async function createBillAction(formData: FormData) {
 }
 
 export async function markBillPaidAction(id: string, createExpense: boolean) {
+  const parsed = resourceIdSchema.safeParse(id);
+  if (!parsed.success) return fail("VALIDATION_ERROR", "Conta inválida.");
   const { supabase, userId } = await requireUser();
-  const result = await billService.markPaid(supabase, userId, id, createExpense);
+  const result = await billService.markPaid(supabase, userId, parsed.data, createExpense);
   if (result.success) revalidateFinance();
   return result;
 }

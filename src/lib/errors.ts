@@ -36,13 +36,11 @@ export const Errors = {
 } as const;
 
 export function toUserError(error: unknown, fallback = Errors.GENERIC): ActionResult<never> {
-  if (
-    typeof error === "object" &&
-    error !== null &&
-    "code" in error &&
-    "message" in error
-  ) {
-    return fail(String(error.code), String(error.message));
+  if (typeof error === "object" && error !== null && "success" in error && error.success === false) {
+    const failed = error as { success: false; error?: ActionError };
+    if (failed.error?.code && failed.error.message) {
+      return fail(failed.error.code, failed.error.message);
+    }
   }
   return fallback;
 }

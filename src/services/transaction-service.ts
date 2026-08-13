@@ -2,6 +2,7 @@ import { addMonthsISO } from "@/lib/date";
 import { splitInstallments } from "@/lib/money";
 import { fail, ok, type ActionResult } from "@/lib/errors";
 import type { TransactionFilter, TransactionInput } from "@/validations/transaction";
+import { sanitizeIlikeTerm } from "@/lib/privacy/safe-path";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Tables } from "@/types/database";
 
@@ -26,10 +27,12 @@ export const transactionService = {
       .limit(200);
 
     if (filters.q) {
-      const term = `%${filters.q}%`;
-      query = query.or(
-        `description.ilike.${term},merchant.ilike.${term},notes.ilike.${term}`,
-      );
+      const term = sanitizeIlikeTerm(filters.q);
+      if (term) {
+        query = query.or(
+          `description.ilike.%${term}%,merchant.ilike.%${term}%,notes.ilike.%${term}%`,
+        );
+      }
     }
     if (filters.type) query = query.eq("type", filters.type);
     if (filters.category_id) query = query.eq("category_id", filters.category_id);

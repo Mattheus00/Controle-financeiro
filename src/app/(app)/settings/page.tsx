@@ -11,14 +11,22 @@ import {
 } from "@/features/finance/actions";
 import { signOutAction } from "@/features/auth/actions";
 import { todayISO } from "@/lib/date";
-import { toFormAction } from "@/lib/form-action";
+import type { FormAction } from "@/types";
+import { PrivacyCenter } from "@/features/privacy/privacy-center";
+import { privacyService } from "@/services/privacy-service";
+import {
+  DATA_PROTECTION_CONTACT_EMAIL,
+  DATA_PROTECTION_CONTACT_NAME,
+} from "@/lib/privacy/config";
 
 export default async function SettingsPage() {
   const { supabase, userId } = await requireUser();
-  const [profile, categories, accounts] = await Promise.all([
+  const [profile, categories, accounts, consents, requests] = await Promise.all([
     profileService.get(supabase, userId),
     categoryService.list(supabase, userId),
     accountService.list(supabase, userId),
+    privacyService.listConsents(supabase, userId),
+    privacyService.listPrivacyRequests(supabase, userId),
   ]);
   const name = profile.success ? profile.data.profile?.name ?? "" : "";
   const cats = categories.success ? categories.data : [];
@@ -31,7 +39,7 @@ export default async function SettingsPage() {
         <p className="text-muted-foreground">Seu perfil, categorias e contas.</p>
       </div>
 
-      <form action={toFormAction(updateProfileAction)} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
+      <form action={updateProfileAction as FormAction} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
         <h2 className="font-display text-2xl md:col-span-2">Perfil</h2>
         <Field label="Nome" htmlFor="name"><Input id="name" name="name" defaultValue={name} required className="h-11" /></Field>
         <Field label="Fuso" htmlFor="timezone">
@@ -51,7 +59,7 @@ export default async function SettingsPage() {
             </li>
           ))}
         </ul>
-        <form action={toFormAction(createAccountAction)} className="mt-4 grid gap-3 md:grid-cols-2">
+        <form action={createAccountAction as FormAction} className="mt-4 grid gap-3 md:grid-cols-2">
           <Field label="Nome" htmlFor="account-name"><Input id="account-name" name="name" required className="h-11" /></Field>
           <Field label="Tipo" htmlFor="type">
             <select id="type" name="type" className="h-11 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm">
@@ -73,7 +81,7 @@ export default async function SettingsPage() {
             <span key={category.id} className="rounded-full bg-muted px-3 py-1 text-sm">{category.name}</span>
           ))}
         </div>
-        <form action={toFormAction(createCategoryAction)} className="mt-4 grid gap-3 md:grid-cols-2">
+        <form action={createCategoryAction as FormAction} className="mt-4 grid gap-3 md:grid-cols-2">
           <Field label="Nova categoria" htmlFor="category-name"><Input id="category-name" name="name" required className="h-11" /></Field>
           <input type="hidden" name="icon" value="CircleDot" />
           <input type="hidden" name="color" value="#84CC16" />
@@ -82,7 +90,7 @@ export default async function SettingsPage() {
         </form>
       </section>
 
-      <form action={toFormAction(createRecurringAction)} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
+      <form action={createRecurringAction as FormAction} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
         <h2 className="font-display text-2xl md:col-span-2">Conta recorrente</h2>
         <Field label="Descrição" htmlFor="description"><Input id="description" name="description" required className="h-11" placeholder="Netflix" /></Field>
         <Field label="Valor" htmlFor="amount"><Input id="amount" name="amount" required className="h-11" /></Field>
@@ -98,6 +106,13 @@ export default async function SettingsPage() {
         <Field label="Começa em" htmlFor="start_date"><Input id="start_date" name="start_date" type="date" defaultValue={todayISO()} className="h-11" /></Field>
         <Button type="submit" className="h-11 rounded-2xl md:col-span-2">Criar recorrência</Button>
       </form>
+
+      <PrivacyCenter
+        consents={consents.success ? consents.data : []}
+        requests={requests.success ? requests.data : []}
+        contactName={DATA_PROTECTION_CONTACT_NAME}
+        contactEmail={DATA_PROTECTION_CONTACT_EMAIL}
+      />
 
       <form action={signOutAction}>
         <Button type="submit" variant="outline" className="h-11 rounded-2xl">Sair da conta</Button>

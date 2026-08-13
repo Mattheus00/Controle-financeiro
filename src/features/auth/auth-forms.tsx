@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, type FormEvent } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Field } from "@/components/ui-kit";
 import { forgotPasswordAction, signInAction, signUpAction } from "@/features/auth/actions";
 
@@ -14,7 +15,9 @@ export function LoginForm() {
   return (
     <form
       className="space-y-4"
-      action={(formData) => {
+      onSubmit={(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
         setError(null);
         start(async () => {
           const result = await signInAction(formData);
@@ -26,7 +29,7 @@ export function LoginForm() {
         <Input id="email" name="email" type="email" autoComplete="email" required className="h-11" />
       </Field>
       <Field label="Senha" htmlFor="password">
-        <Input id="password" name="password" type="password" autoComplete="current-password" required className="h-11" />
+        <PasswordInput id="password" name="password" autoComplete="current-password" required className="h-11" />
       </Field>
       {error ? <p className="text-sm text-danger">{error}</p> : null}
       <Button type="submit" disabled={pending} className="h-11 w-full rounded-2xl">
@@ -60,7 +63,9 @@ export function SignUpForm() {
   return (
     <form
       className="space-y-4"
-      action={(formData) => {
+      onSubmit={(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
         setError(null);
         start(async () => {
           const result = await signUpAction(formData);
@@ -79,8 +84,28 @@ export function SignUpForm() {
         <Input id="email" name="email" type="email" required className="h-11" />
       </Field>
       <Field label="Senha" htmlFor="password">
-        <Input id="password" name="password" type="password" minLength={8} required className="h-11" />
+        <PasswordInput id="password" name="password" minLength={8} required className="h-11" />
       </Field>
+      <label className="flex items-start gap-2 text-sm text-muted-foreground">
+        <input type="checkbox" name="accepted_privacy" className="mt-1 size-4" />
+        <span>
+          Li e concordo com a{" "}
+          <Link href="/privacidade" className="font-medium text-foreground hover:underline">
+            Política de Privacidade
+          </Link>
+          .
+        </span>
+      </label>
+      <label className="flex items-start gap-2 text-sm text-muted-foreground">
+        <input type="checkbox" name="accepted_terms" className="mt-1 size-4" />
+        <span>
+          Li e concordo com os{" "}
+          <Link href="/termos" className="font-medium text-foreground hover:underline">
+            Termos de Uso
+          </Link>
+          .
+        </span>
+      </label>
       {error ? <p className="text-sm text-danger">{error}</p> : null}
       <Button type="submit" disabled={pending} className="h-11 w-full rounded-2xl">
         {pending ? "Criando..." : "Criar conta"}
@@ -106,7 +131,9 @@ export function ForgotPasswordForm() {
   return (
     <form
       className="space-y-4"
-      action={(formData) => {
+      onSubmit={(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
         start(async () => {
           await forgotPasswordAction(formData);
           setDone(true);

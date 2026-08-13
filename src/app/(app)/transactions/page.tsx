@@ -2,11 +2,11 @@ import { requireUser } from "@/lib/supabase/auth";
 import { transactionService } from "@/services/transaction-service";
 import { categoryService } from "@/services/catalog-service";
 import { EmptyState, MoneyText } from "@/components/ui-kit";
-import { EntityIcon } from "@/components/icons/entity-icon";
+import { MerchantLogo } from "@/components/merchant/MerchantLogo";
 import { formatDateBR } from "@/lib/date";
 import { PAYMENT_METHOD_LABELS, TRANSACTION_TYPE_LABELS } from "@/types";
 import { TransactionFilters } from "@/features/transactions/filters";
-import { matchMerchantIcon } from "@/lib/icons";
+import { transactionFilterSchema } from "@/validations/transaction";
 
 export default async function TransactionsPage({
   searchParams,
@@ -14,16 +14,16 @@ export default async function TransactionsPage({
   searchParams: Promise<Record<string, string | undefined>>;
 }) {
   const params = await searchParams;
+  const filters = transactionFilterSchema.safeParse({
+    q: params.q || undefined,
+    type: params.type || undefined,
+    from: params.from || undefined,
+    to: params.to || undefined,
+  });
   const { supabase, userId } = await requireUser();
-  const [{ data: rules }, categories, result] = await Promise.all([
-    supabase.from("merchant_icon_rules").select("pattern, icon"),
+  const [categories, result] = await Promise.all([
     categoryService.list(supabase, userId),
-    transactionService.list(supabase, userId, {
-      q: params.q,
-      type: params.type as never,
-      from: params.from,
-      to: params.to,
-    }),
+    transactionService.list(supabase, userId, filters.success ? filters.data : {}),
   ]);
 
   const rows = result.success ? result.data : [];
@@ -45,13 +45,14 @@ export default async function TransactionsPage({
         <ul className="space-y-2">
           {rows.map((row) => {
             const category = row.category_id ? categoryMap.get(row.category_id) : undefined;
-            const icon =
-              row.icon ||
-              matchMerchantIcon(row.merchant, rules ?? []) ||
-              category?.icon;
             return (
               <li key={row.id} className="flex items-center gap-3 rounded-3xl bg-card px-4 py-3 ring-1 ring-border">
-                <EntityIcon name={icon} label={row.merchant || row.description} color={category?.color} />
+                <MerchantLogo
+                  merchantName={row.merchant || row.description}
+                  category={category?.slug}
+                  categoryIcon={row.icon || category?.icon}
+                  categoryColor={category?.color}
+                />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium">{row.merchant || row.description}</p>
                   <p className="text-xs text-muted-foreground">
