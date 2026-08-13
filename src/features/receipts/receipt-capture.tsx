@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field } from "@/components/ui-kit";
 import { confirmReceiptAction, processReceiptAction } from "@/features/receipts/actions";
+import { prepareReceiptFile, receiptPrepareErrorMessage } from "@/lib/prepare-receipt-file";
 import { todayISO } from "@/lib/date";
 import { PAYMENT_METHOD_LABELS, type ReceiptExtraction } from "@/types";
 import { MerchantLogo } from "@/components/merchant/MerchantLogo";
@@ -45,15 +46,27 @@ export function ReceiptCapture({ onDone }: { onDone: () => void }) {
           setStep((current) => Math.min(current + 1, STEPS.length - 2));
         }, 700);
         start(async () => {
-          const result = await processReceiptAction(formData);
-          window.clearInterval(timer);
-          if (!result.success) {
-            toast.error(result.error.message);
-            return;
+          try {
+            const file = formData.get("file");
+            if (!(file instanceof File) || file.size === 0) {
+              window.clearInterval(timer);
+              toast.error("Escolha uma foto ou um PDF do comprovante.");
+              return;
+            }
+            formData.set("file", await prepareReceiptFile(file));
+            const result = await processReceiptAction(formData);
+            window.clearInterval(timer);
+            if (!result.success) {
+              toast.error(result.error.message);
+              return;
+            }
+            setStep(STEPS.length - 1);
+            setScanId(result.data.scanId);
+            setExtracted(result.data.extracted);
+          } catch (error) {
+            window.clearInterval(timer);
+            toast.error(receiptPrepareErrorMessage(error));
           }
-          setStep(STEPS.length - 1);
-          setScanId(result.data.scanId);
-          setExtracted(result.data.extracted);
         });
       }}
     >
@@ -62,7 +75,7 @@ export function ReceiptCapture({ onDone }: { onDone: () => void }) {
           id="file"
           name="file"
           type="file"
-          accept="image/*,application/pdf,capture=camera"
+          accept="image/*,application/pdf"
           capture="environment"
           required
           className="h-11"
