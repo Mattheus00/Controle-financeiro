@@ -46,9 +46,9 @@ export function ReceiptDemo() {
         <span className="grid size-12 place-items-center rounded-2xl bg-primary/50">
           <ShoppingCart className="size-5" />
         </span>
-        <div>
-          <p className="text-sm text-muted-foreground">Supermercado Verdemar</p>
-          <p className="font-display text-4xl tracking-tight">R$ 186,42</p>
+        <div className="min-w-0">
+          <p className="truncate text-sm text-muted-foreground">Supermercado Verdemar</p>
+          <p className="font-display text-[clamp(1.75rem,8vw,2.25rem)] tracking-tight tabular-nums">R$ 186,42</p>
         </div>
       </div>
       <dl className="mt-5 grid grid-cols-2 gap-3 text-sm">

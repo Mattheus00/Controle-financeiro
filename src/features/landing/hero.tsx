@@ -12,7 +12,7 @@ export function Hero() {
       <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
         <Reveal>
           <p className="text-sm font-medium text-muted-foreground">Controle financeiro pessoal</p>
-          <h1 className="mt-4 font-display text-[2.35rem] leading-[1.08] tracking-tight sm:text-5xl md:text-[4rem]">
+          <h1 className="mt-4 font-display text-[2rem] leading-[1.1] tracking-tight sm:text-[2.35rem] md:text-5xl lg:text-[4rem]">
             Entenda para onde seu dinheiro está indo.
           </h1>
           <p className="mt-5 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg">

@@ -192,11 +192,11 @@ function ConfirmForm({
               category={extracted.suggested_category}
               size="lg"
             />
-            <div className="min-w-0">
-              <p className="font-display text-2xl">{extracted.merchant || "Estabelecimento"}</p>
-              <p className="text-lg">{amount ? `R$ ${amount}` : "Valor não identificado"}</p>
+            <div className="min-w-0 flex-1">
+              <p className="font-display text-2xl break-words">{extracted.merchant || "Estabelecimento"}</p>
+              <p className="text-lg tabular-nums">{amount ? `R$ ${amount}` : "Valor não identificado"}</p>
               {detailParts.length > 0 ? (
-                <p className="text-sm text-muted-foreground">{detailParts.join(" · ")}</p>
+                <p className="text-sm break-words text-muted-foreground">{detailParts.join(" · ")}</p>
               ) : null}
             </div>
           </div>
@@ -218,7 +218,7 @@ function ConfirmForm({
       <Field label="Descrição" htmlFor="confirm-description">
         <Input id="confirm-description" name="description" defaultValue={extracted.description ?? extracted.merchant ?? ""} className="h-11" />
       </Field>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Field label="Data" htmlFor="confirm-date">
           <Input id="confirm-date" name="date" type="date" defaultValue={extracted.date ?? todayISO()} className="h-11" />
         </Field>

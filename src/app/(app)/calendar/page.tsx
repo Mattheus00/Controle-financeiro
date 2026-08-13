@@ -15,7 +15,7 @@ export default async function CalendarPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-4xl tracking-tight">Calendário</h1>
+        <h1 className="font-display text-3xl tracking-tight sm:text-4xl">Calendário</h1>
         <p className="capitalize text-muted-foreground">{format(today, "MMMM yyyy", { locale: ptBR })}</p>
       </div>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4 xl:grid-cols-7">

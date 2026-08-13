@@ -16,7 +16,7 @@ export default async function CardsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-4xl tracking-tight">Cartões</h1>
+        <h1 className="font-display text-3xl tracking-tight sm:text-4xl">Cartões</h1>
         <p className="text-muted-foreground">Limite, fatura e vencimento. Sem número completo.</p>
       </div>
       {cards.length === 0 ? (
@@ -27,25 +27,25 @@ export default async function CardsPage() {
             <Card key={card.id} className="rounded-3xl">
               <CardHeader className="flex flex-row items-start gap-3">
                 <MerchantLogo merchantName={card.brand || card.name} size="lg" />
-                <div>
+                <div className="min-w-0">
                   <p className="text-sm text-muted-foreground">{card.brand || "Cartão"}</p>
-                  <h2 className="font-display text-2xl">{card.name}</h2>
+                  <h2 className="font-display text-2xl break-words">{card.name}</h2>
                   <p className="text-muted-foreground">**** {card.last_four ?? "----"}</p>
                 </div>
               </CardHeader>
               <CardContent className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Fatura atual</span>
+                <div className="flex items-start justify-between gap-3 text-sm">
+                  <span className="min-w-0">Fatura atual</span>
                   <MoneyText cents={card.invoice_cents} />
                 </div>
                 {card.limit_cents != null ? (
                   <>
-                    <div className="flex justify-between text-sm">
-                      <span>Limite</span>
+                    <div className="flex items-start justify-between gap-3 text-sm">
+                      <span className="min-w-0">Limite</span>
                       <MoneyText cents={card.limit_cents} />
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Disponível</span>
+                    <div className="flex items-start justify-between gap-3 text-sm">
+                      <span className="min-w-0">Disponível</span>
                       <MoneyText cents={card.available_cents ?? 0} tone="success" />
                     </div>
                   </>

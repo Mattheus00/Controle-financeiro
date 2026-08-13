@@ -16,7 +16,7 @@ export function LandingFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-background px-4 py-12 md:px-6">
+    <footer className="border-t border-border bg-background px-4 py-12 pb-[max(3rem,env(safe-area-inset-bottom))] md:px-6">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-8 md:flex-row md:items-start md:justify-between">
         <div>
           <Logo />

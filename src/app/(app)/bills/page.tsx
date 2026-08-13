@@ -20,7 +20,7 @@ export default async function BillsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-4xl tracking-tight">Contas</h1>
+        <h1 className="font-display text-3xl tracking-tight sm:text-4xl">Contas</h1>
         <p className="text-muted-foreground">O que ainda precisa ser pago.</p>
       </div>
       {bills.length === 0 ? (
@@ -33,22 +33,26 @@ export default async function BillsPage() {
           {bills.map((bill) => {
             const category = bill.category_id ? categoryMap.get(bill.category_id) : undefined;
             return (
-              <li key={bill.id} className="flex items-center gap-3 rounded-3xl bg-card px-4 py-3 ring-1 ring-border">
-                <MerchantLogo
-                  merchantName={bill.name}
-                  category={category?.slug}
-                  categoryIcon={bill.icon || category?.icon}
-                  categoryColor={category?.color}
-                />
-                <div className="min-w-0 flex-1">
-                  <p className="font-medium">{bill.name}</p>
-                  <p className="text-xs text-muted-foreground">{formatDayMonth(bill.due_date)}</p>
+              <li key={bill.id} className="flex flex-col gap-3 rounded-3xl bg-card px-4 py-3 ring-1 ring-border sm:flex-row sm:items-center">
+                <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <MerchantLogo
+                    merchantName={bill.name}
+                    category={category?.slug}
+                    categoryIcon={bill.icon || category?.icon}
+                    categoryColor={category?.color}
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium">{bill.name}</p>
+                    <p className="text-xs text-muted-foreground">{formatDayMonth(bill.due_date)}</p>
+                  </div>
                 </div>
-                <Badge variant={bill.status === "overdue" ? "destructive" : "secondary"}>
-                  {BILL_STATUS_LABELS[bill.status as BillStatus]}
-                </Badge>
-                <MoneyText cents={bill.amount_cents} className="text-lg" />
-                {bill.status !== "paid" ? <PayBillButton id={bill.id} /> : null}
+                <div className="flex items-center justify-between gap-2 sm:justify-end">
+                  <Badge variant={bill.status === "overdue" ? "destructive" : "secondary"}>
+                    {BILL_STATUS_LABELS[bill.status as BillStatus]}
+                  </Badge>
+                  <MoneyText cents={bill.amount_cents} className="text-lg" />
+                  {bill.status !== "paid" ? <PayBillButton id={bill.id} /> : null}
+                </div>
               </li>
             );
           })}

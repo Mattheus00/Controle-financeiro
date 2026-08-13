@@ -27,7 +27,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <header className="sticky top-0 z-20 hidden items-center justify-end gap-3 border-b border-transparent bg-background/80 px-8 py-4 backdrop-blur lg:flex">
             <DesktopQuickAdd />
           </header>
-          <main className="mx-auto w-full max-w-6xl flex-1 px-4 pb-28 pt-6 lg:px-8 lg:pb-10">
+          <main className="mx-auto w-full min-w-0 max-w-6xl flex-1 px-4 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[calc(6.75rem+env(safe-area-inset-bottom))] lg:px-8 lg:pb-10 lg:pt-6">
             {children}
           </main>
         </div>

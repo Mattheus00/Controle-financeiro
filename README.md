@@ -7,7 +7,7 @@ Controle financeiro pessoal: rápido no celular, calmo no desktop. Next.js + Sup
 - Next.js App Router, TypeScript, Tailwind, shadcn/ui
 - Supabase (Postgres, Auth, Storage, RLS)
 - Vercel para deploy
-- OCR de comprovantes via `ReceiptProcessor` (OpenAI Vision)
+- OCR de comprovantes via Groq (Qwen 3.6, visão no servidor)
 
 ## Começar
 
@@ -41,7 +41,7 @@ Veja `.env.example`.
 | `NEXT_PUBLIC_SUPABASE_URL` | Client e server | URL do projeto |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Client e server | Chave publicável / anon |
 | `SUPABASE_SERVICE_ROLE_KEY` | Apenas servidor | Operações privilegiadas, se necessário |
-| `OPENAI_API_KEY` | Apenas servidor | Leitura de comprovantes |
+| `GROQ_API_KEY` | Apenas servidor | Leitura de comprovantes (Groq) |
 | `NEXT_PUBLIC_APP_URL` | Server | Redirects de auth |
 
 Nunca exponha `SUPABASE_SERVICE_ROLE_KEY` com prefixo `NEXT_PUBLIC_`.
@@ -77,4 +77,4 @@ Cobrem formatação BRL, parcelas, orçamento, ícones, OCR normalizado e valida
 
 O fluxo nunca cadastra gasto sozinho. Upload → compressão/remoção de EXIF → Storage privado → `ReceiptProcessor` → tela de confirmação → transação.
 
-Sem `OPENAI_API_KEY`, o comprovante ainda é salvo e o usuário preenche os dados na mão.
+Sem `GROQ_API_KEY`, o comprovante ainda é salvo e o usuário preenche os dados na mão.

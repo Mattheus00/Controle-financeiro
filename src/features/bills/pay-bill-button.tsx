@@ -11,7 +11,7 @@ export function PayBillButton({ id }: { id: string }) {
   return (
     <Button
       variant="outline"
-      className="rounded-2xl"
+      className="h-11 min-w-11 shrink-0 rounded-2xl"
       disabled={pending}
       onClick={() => {
         const createExpense = window.confirm("Marcar como pago e criar uma despesa automaticamente?");

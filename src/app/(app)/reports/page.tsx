@@ -11,7 +11,7 @@ export default async function ReportsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-4xl tracking-tight">Relatórios</h1>
+        <h1 className="font-display text-3xl tracking-tight sm:text-4xl">Relatórios</h1>
         <p className="text-muted-foreground">Uma leitura calma do ano.</p>
       </div>
       <div className="grid gap-4 md:grid-cols-3">
@@ -42,7 +42,7 @@ export default async function ReportsPage() {
           {data.categories.map((category) => (
             <div key={category.slug} className="flex items-center gap-3">
               <EntityIcon name={category.icon} color={category.color} />
-              <p className="flex-1 font-medium">{category.name}</p>
+              <p className="min-w-0 flex-1 truncate font-medium">{category.name}</p>
               <MoneyText cents={category.amount} />
             </div>
           ))}

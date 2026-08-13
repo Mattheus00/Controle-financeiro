@@ -14,7 +14,7 @@ export default async function GoalsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-4xl tracking-tight">Metas</h1>
+        <h1 className="font-display text-3xl tracking-tight sm:text-4xl">Metas</h1>
         <p className="text-muted-foreground">Guarde um pouco agora. O futuro agradece.</p>
       </div>
       {goals.length === 0 ? (
@@ -25,19 +25,19 @@ export default async function GoalsPage() {
             const percent = Math.min(100, Math.round((goal.current_cents / goal.target_cents) * 100));
             return (
               <div key={goal.id} className="rounded-3xl bg-card p-5 ring-1 ring-border">
-                <h2 className="font-display text-2xl">{goal.name}</h2>
+                <h2 className="font-display text-2xl break-words">{goal.name}</h2>
                 <p className="mt-2 text-sm text-muted-foreground">
                   Meta: {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(goal.target_cents / 100)}
                 </p>
-                <MoneyText cents={goal.current_cents} className="text-3xl" />
+                <MoneyText cents={goal.current_cents} className="text-[clamp(1.5rem,7vw,1.875rem)]" />
                 <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
                   <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${percent}%` }} />
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">{percent}%</p>
-                <form action={asFormAction(contributeGoalAction)} className="mt-4 flex gap-2">
+                <form action={asFormAction(contributeGoalAction)} className="mt-4 flex flex-col gap-2 sm:flex-row">
                   <input type="hidden" name="goal_id" value={goal.id} />
-                  <Input name="amount" placeholder="R$ 100" className="h-11" />
-                  <Button type="submit" className="h-11 rounded-2xl">Guardar</Button>
+                  <Input name="amount" placeholder="R$ 100" className="h-11 min-w-0 flex-1" />
+                  <Button type="submit" className="h-11 rounded-2xl sm:shrink-0">Guardar</Button>
                 </form>
               </div>
             );

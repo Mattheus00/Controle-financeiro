@@ -21,16 +21,20 @@ export function BillsSection() {
       <div className="mt-10 grid gap-3 md:grid-cols-2">
         {DEMO_BILLS.map((bill, index) => (
           <Reveal key={bill.name} delay={index * 0.04}>
-            <article className="flex items-center gap-4 rounded-[1.75rem] bg-card p-4 ring-1 ring-border transition duration-200 hover:-translate-y-0.5">
-              <span className="grid size-12 place-items-center rounded-2xl bg-secondary">
-                <bill.icon className="size-5" />
-              </span>
-              <div className="min-w-0 flex-1">
-                <p className="font-medium">{bill.name}</p>
-                <p className="text-xs text-muted-foreground">{bill.date}</p>
+            <article className="flex flex-col gap-3 rounded-[1.75rem] bg-card p-4 ring-1 ring-border transition duration-200 hover:-translate-y-0.5 sm:flex-row sm:items-center sm:gap-4">
+              <div className="flex min-w-0 flex-1 items-center gap-3">
+                <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-secondary">
+                  <bill.icon className="size-5" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium">{bill.name}</p>
+                  <p className="text-xs text-muted-foreground">{bill.date}</p>
+                </div>
               </div>
-              <p className="font-display text-xl tracking-tight">{bill.amount}</p>
-              <Badge className={cn("capitalize", STATUS_CLASS[bill.status])}>{bill.status}</Badge>
+              <div className="flex items-center justify-between gap-2 sm:justify-end">
+                <p className="font-display text-xl tracking-tight tabular-nums">{bill.amount}</p>
+                <Badge className={cn("capitalize", STATUS_CLASS[bill.status])}>{bill.status}</Badge>
+              </div>
             </article>
           </Reveal>
         ))}

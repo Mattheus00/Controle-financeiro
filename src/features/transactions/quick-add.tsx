@@ -90,11 +90,11 @@ function QuickAddControl({ variant }: { variant: "fab" | "button" }) {
     <>
       {trigger}
       <Drawer open={open} onOpenChange={(value) => (value ? setOpen(true) : close())}>
-        <DrawerContent className="max-h-[92dvh] rounded-t-3xl">
+        <DrawerContent className="flex max-h-[min(92dvh,100%)] flex-col rounded-t-3xl data-[vaul-drawer-direction=bottom]:max-h-[min(92dvh,100%)]">
           <DrawerHeader>
             <DrawerTitle>{titleFor(mode)}</DrawerTitle>
           </DrawerHeader>
-          <div className="overflow-y-auto px-4 pb-[max(2rem,env(safe-area-inset-bottom))]">{body}</div>
+          <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))]">{body}</div>
         </DrawerContent>
       </Drawer>
     </>
@@ -171,7 +171,7 @@ function MenuButton({
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center gap-3 rounded-2xl px-3 py-3 text-left transition hover:bg-muted"
+      className="flex min-h-12 items-center gap-3 rounded-2xl px-3 py-3 text-left transition hover:bg-muted"
     >
       <span className="grid size-10 place-items-center rounded-2xl bg-secondary">
         <Icon className="size-4" />
@@ -210,7 +210,7 @@ function ExpenseForm({ onDone }: { onDone: () => void }) {
       <Field label="Descrição" htmlFor="description">
         <Input id="description" name="description" placeholder="Opcional" className="h-11" />
       </Field>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <Field label="Pagamento" htmlFor="payment_method">
           <select id="payment_method" name="payment_method" defaultValue="pix" className="h-11 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm">
             <option value="pix">PIX</option>

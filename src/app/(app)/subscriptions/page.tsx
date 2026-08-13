@@ -19,12 +19,12 @@ export default async function SubscriptionsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-4xl tracking-tight">Assinaturas</h1>
+        <h1 className="font-display text-3xl tracking-tight sm:text-4xl">Assinaturas</h1>
         <p className="text-muted-foreground">O custo mensal parece pequeno. O anual, nem tanto.</p>
       </div>
       <div className="rounded-3xl bg-secondary p-6">
         <p className="text-sm text-muted-foreground">Total mensal com assinaturas</p>
-        <MoneyText cents={data.monthly} className="text-4xl" />
+        <MoneyText cents={data.monthly} className="text-[clamp(1.75rem,8vw,2.25rem)]" />
         <p className="mt-2 text-muted-foreground">{new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(data.yearly / 100)} / ano</p>
       </div>
       {data.items.length === 0 ? (
@@ -43,8 +43,8 @@ export default async function SubscriptionsPage() {
                   category={category?.slug}
                   categoryIcon={item.icon || category?.icon}
                 />
-                <div className="flex-1">
-                  <p className="font-medium">{item.name}</p>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium">{item.name}</p>
                   <p className="text-xs text-muted-foreground">Todo dia {item.billing_day}</p>
                 </div>
                 <MoneyText cents={item.amount_cents} className="text-lg" />

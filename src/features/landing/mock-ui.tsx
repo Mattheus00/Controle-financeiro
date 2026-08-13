@@ -42,7 +42,7 @@ export function StatCard({
   return (
     <div className="rounded-3xl bg-card p-4 ring-1 ring-border">
       <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="mt-1 font-display text-2xl tracking-tight md:text-[1.7rem]">{value}</p>
+      <p className="mt-1 font-display text-[clamp(1rem,4.6vw,1.7rem)] tracking-tight whitespace-nowrap">{value}</p>
       {hint ? (
         <p
           className={cn(
@@ -81,7 +81,7 @@ export function TxRow({
         <p className="truncate text-sm font-medium">{name}</p>
         {category ? <p className="text-xs text-muted-foreground">{category}</p> : null}
       </div>
-      <p className="text-sm font-medium tabular-nums">{amount}</p>
+          <p className="shrink-0 text-sm font-medium tabular-nums">{amount}</p>
     </div>
   );
 }

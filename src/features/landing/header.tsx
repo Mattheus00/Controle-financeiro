@@ -18,7 +18,7 @@ export function LandingHeader() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-border/70 bg-background/85 pt-[env(safe-area-inset-top)] backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 md:h-[4.25rem] md:px-6">
         <Link href="/" aria-label="Folio, página inicial">
           <Logo />
@@ -43,11 +43,11 @@ export function LandingHeader() {
         </div>
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Abrir menu">
+            <Button variant="ghost" size="icon" className="size-11 lg:hidden" aria-label="Abrir menu">
               <Menu className="size-5" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="right" className="bg-background">
+          <SheetContent side="right" className="bg-background pb-[max(1rem,env(safe-area-inset-bottom))]">
             <SheetHeader>
               <SheetTitle className="font-display text-2xl">Folio</SheetTitle>
             </SheetHeader>

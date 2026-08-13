@@ -54,14 +54,16 @@ describe("OCR payload", () => {
   it("sends only the file and extraction instructions", () => {
     const body = buildOcrRequestBody({
       mimeType: "image/jpeg",
-      dataUrl: "data:image/jpeg;base64,abc",
+      base64: "abc",
     });
     const serialized = JSON.stringify(body);
     expect(serialized).not.toContain("user_id");
     expect(serialized).not.toContain("amount_cents");
     expect(serialized).not.toContain("saldo");
-    expect(body.store).toBe(false);
+    expect(serialized).not.toContain("gsk_");
     expect(body.messages).toHaveLength(2);
+    expect(body.response_format.type).toBe("json_object");
+    expect(serialized).toContain("image_url");
   });
 });
 

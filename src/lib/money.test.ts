@@ -69,6 +69,19 @@ describe("receipt extraction", () => {
     expect(result.suggested_category).toBe("alimentacao");
     expect(result.confidence).toBe(0.94);
   });
+
+  it("normalizes Brazilian amount and date strings from vision models", () => {
+    const result = normalizeExtraction({
+      merchant: "Netflix",
+      amount: "R$ 55,90",
+      date: "13/08/2026",
+      payment_method: "PIX",
+      confidence: 0.8,
+    });
+    expect(result.amount).toBe(55.9);
+    expect(result.date).toBe("2026-08-13");
+    expect(result.payment_method).toBe("pix");
+  });
 });
 
 describe("transaction validation", () => {

@@ -1,4 +1,6 @@
 import {
+  BarChart3,
+  CalendarDays,
   CreditCard,
   LayoutDashboard,
   PiggyBank,
@@ -17,7 +19,7 @@ export const NAV_ITEMS = [
   { href: "/subscriptions", label: "Assinaturas", icon: RefreshCw },
   { href: "/budgets", label: "Orçamento", icon: PiggyBank },
   { href: "/goals", label: "Metas", icon: Target },
-  { href: "/calendar", label: "Calendário", icon: LayoutDashboard, hideOnMobile: true },
-  { href: "/reports", label: "Relatórios", icon: LayoutDashboard, hideOnMobile: true },
-  { href: "/settings", label: "Configurações", icon: Settings, hideOnMobile: true },
+  { href: "/calendar", label: "Calendário", icon: CalendarDays },
+  { href: "/reports", label: "Relatórios", icon: BarChart3 },
+  { href: "/settings", label: "Perfil", icon: Settings },
 ] as const;

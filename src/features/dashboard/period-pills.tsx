@@ -25,7 +25,7 @@ export function PeriodPills() {
           type="button"
           onClick={() => router.push(`/dashboard?period=${period.id}`)}
           className={cn(
-            "rounded-full px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-muted",
+            "min-h-11 rounded-full px-3 py-2 text-sm text-muted-foreground transition hover:bg-muted",
             current === period.id && "bg-foreground text-background",
           )}
         >

@@ -52,7 +52,7 @@ export function Faq() {
               <div key={item.q} className="px-5">
                 <button
                   type="button"
-                  className="flex w-full items-center justify-between gap-4 py-5 text-left"
+                  className="flex min-h-12 w-full items-center justify-between gap-4 py-5 text-left"
                   aria-expanded={isOpen}
                   onClick={() => setOpen(isOpen ? -1 : index)}
                 >

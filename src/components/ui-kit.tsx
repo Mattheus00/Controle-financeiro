@@ -15,11 +15,11 @@ export function EmptyState({
   return (
     <div
       className={cn(
-        "flex flex-col items-start gap-3 rounded-3xl border border-dashed border-border bg-card/60 px-6 py-10",
+        "flex flex-col items-start gap-3 rounded-3xl border border-dashed border-border bg-card/60 px-5 py-8 sm:px-6 sm:py-10",
         className,
       )}
     >
-      <h2 className="font-display text-2xl tracking-tight">{title}</h2>
+      <h2 className="font-display text-xl tracking-tight break-words sm:text-2xl">{title}</h2>
       <p className="max-w-md text-muted-foreground">{description}</p>
       {action}
     </div>
@@ -65,7 +65,7 @@ export function MoneyText({
   return (
     <span
       className={cn(
-        "font-display tracking-tight",
+        "inline-block shrink-0 font-display tracking-tight whitespace-nowrap tabular-nums",
         tone === "danger" && "text-danger",
         tone === "success" && "text-success",
         tone === "muted" && "text-muted-foreground",

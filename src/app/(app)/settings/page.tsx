@@ -3,6 +3,7 @@ import { accountService, categoryService, profileService } from "@/services/cata
 import { Field } from "@/components/ui-kit";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
   createAccountAction,
   createCategoryAction,
@@ -18,6 +19,15 @@ import {
   DATA_PROTECTION_CONTACT_EMAIL,
   DATA_PROTECTION_CONTACT_NAME,
 } from "@/lib/privacy/config";
+
+const MORE_APP_LINKS = [
+  { href: "/cards", label: "Cartões" },
+  { href: "/subscriptions", label: "Assinaturas" },
+  { href: "/budgets", label: "Orçamento" },
+  { href: "/goals", label: "Metas" },
+  { href: "/calendar", label: "Calendário" },
+  { href: "/reports", label: "Relatórios" },
+] as const;
 
 export default async function SettingsPage() {
   const { supabase, userId } = await requireUser();
@@ -35,9 +45,21 @@ export default async function SettingsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-4xl tracking-tight">Configurações</h1>
+        <h1 className="font-display text-3xl tracking-tight sm:text-4xl">Perfil</h1>
         <p className="text-muted-foreground">Seu perfil, categorias e contas.</p>
       </div>
+
+      <nav className="grid grid-cols-2 gap-2 lg:hidden" aria-label="Mais telas">
+        {MORE_APP_LINKS.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className="rounded-2xl bg-card px-4 py-3 text-sm font-medium ring-1 ring-border"
+          >
+            {item.label}
+          </Link>
+        ))}
+      </nav>
 
       <form action={asFormAction(updateProfileAction)} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
         <h2 className="font-display text-2xl md:col-span-2">Perfil</h2>
@@ -53,9 +75,9 @@ export default async function SettingsPage() {
         <h2 className="font-display text-2xl">Contas bancárias</h2>
         <ul className="mt-3 space-y-2 text-sm">
           {accs.map((account) => (
-            <li key={account.id} className="flex justify-between rounded-2xl bg-muted px-3 py-2">
-              <span>{account.name}</span>
-              <span className="text-muted-foreground">{account.type}</span>
+            <li key={account.id} className="flex items-start justify-between gap-3 rounded-2xl bg-muted px-3 py-2">
+              <span className="min-w-0 break-words">{account.name}</span>
+              <span className="shrink-0 text-muted-foreground">{account.type}</span>
             </li>
           ))}
         </ul>

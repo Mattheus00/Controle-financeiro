@@ -35,7 +35,7 @@ export default async function DashboardPage({
     <div className="space-y-8">
       <div>
         <p className="text-sm text-muted-foreground">Visão geral</p>
-        <h1 className="font-display text-4xl tracking-tight">Seu mês, em paz.</h1>
+        <h1 className="font-display text-3xl tracking-tight sm:text-4xl">Seu mês, em paz.</h1>
       </div>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -73,7 +73,7 @@ export default async function DashboardPage({
                 <div key={category.slug} className="flex items-center gap-3">
                   <EntityIcon name={category.icon} color={category.color} />
                   <div className="min-w-0 flex-1">
-                    <p className="font-medium">{category.name}</p>
+                    <p className="truncate font-medium">{category.name}</p>
                     <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-muted">
                       <div
                         className="h-full rounded-full bg-primary"
@@ -130,7 +130,7 @@ function SummaryCard({
     <Card className="rounded-3xl">
       <CardHeader>
         <p className="text-sm text-muted-foreground">{title}</p>
-        <MoneyText cents={cents} className="text-3xl" tone={tone} />
+        <MoneyText cents={cents} className="text-[clamp(1.5rem,7vw,1.875rem)]" tone={tone} />
         {change != null ? (
           <p className="text-xs text-muted-foreground">
             {change > 0 ? "+" : ""}
@@ -144,9 +144,11 @@ function SummaryCard({
 
 function Row({ label, value, strong }: { label: string; value: string; strong?: boolean }) {
   return (
-    <div className="flex items-center justify-between">
-      <span className="text-muted-foreground">{label}</span>
-      <span className={strong ? "font-display text-xl" : "font-medium"}>{value}</span>
+    <div className="flex items-start justify-between gap-3">
+      <span className="min-w-0 text-muted-foreground">{label}</span>
+      <span className={strong ? "shrink-0 text-right font-display text-xl tabular-nums" : "shrink-0 text-right font-medium tabular-nums"}>
+        {value}
+      </span>
     </div>
   );
 }

@@ -24,11 +24,11 @@ export function SubscriptionsSection() {
         <Reveal delay={0.08}>
           <div className="rounded-[2rem] bg-brand-dark p-8 text-background md:p-12">
             <p className="text-sm text-background/70">Tudo isso soma</p>
-            <p className="mt-3 font-display text-5xl tracking-tight md:text-6xl">R$ 327,80</p>
+            <p className="mt-3 font-display text-[clamp(2rem,12vw,3.75rem)] tracking-tight tabular-nums">R$ 327,80</p>
             <p className="mt-1 text-lg text-primary">/ mês</p>
             <div className="mt-8 border-t border-background/15 pt-6">
               <p className="text-sm text-background/70">Em um ano</p>
-              <p className="mt-2 font-display text-4xl tracking-tight md:text-5xl">R$ 3.933,60</p>
+              <p className="mt-2 font-display text-[clamp(1.75rem,10vw,3rem)] tracking-tight tabular-nums">R$ 3.933,60</p>
             </div>
           </div>
         </Reveal>

@@ -31,7 +31,7 @@ export default async function BudgetsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="font-display text-4xl tracking-tight">Orçamento</h1>
+        <h1 className="font-display text-3xl tracking-tight sm:text-4xl">Orçamento</h1>
         <p className="text-muted-foreground">Limites simples, sem culpa.</p>
       </div>
       {items.length === 0 ? (
@@ -44,15 +44,17 @@ export default async function BudgetsPage() {
             const tone = budgetTone(item.spent_cents, item.amount_cents);
             return (
               <div key={item.id} className="rounded-3xl bg-card p-4 ring-1 ring-border">
-                <div className="flex items-center gap-3">
+                <div className="flex items-start gap-3">
                   <EntityIcon name={category?.icon} label={category?.name} color={category?.color} />
-                  <div className="flex-1">
-                    <p className="font-medium">{category?.name}</p>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                      <p className="truncate font-medium">{category?.name}</p>
+                      <p className="shrink-0 text-sm">
+                        <MoneyText cents={item.spent_cents} className="text-base" /> / {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(item.amount_cents / 100)}
+                      </p>
+                    </div>
                     <p className="text-xs text-muted-foreground">{TONE_LABEL[tone]}</p>
                   </div>
-                  <p className="text-sm">
-                    <MoneyText cents={item.spent_cents} className="text-base" /> / {new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(item.amount_cents / 100)}
-                  </p>
                 </div>
                 <div className="mt-3 h-2 overflow-hidden rounded-full bg-muted">
                   <div

@@ -35,7 +35,7 @@ export function LoginForm() {
       <Button type="submit" disabled={pending} className="h-11 w-full rounded-2xl">
         {pending ? "Entrando..." : "Entrar"}
       </Button>
-      <div className="flex justify-between text-sm">
+      <div className="flex flex-wrap justify-between gap-3 text-sm">
         <Link href="/forgot-password" className="text-muted-foreground hover:text-foreground">
           Esqueci a senha
         </Link>
@@ -87,7 +87,7 @@ export function SignUpForm() {
         <PasswordInput id="password" name="password" minLength={8} required className="h-11" />
       </Field>
       <label className="flex items-start gap-2 text-sm text-muted-foreground">
-        <input type="checkbox" name="accepted_privacy" className="mt-1 size-4" />
+        <input type="checkbox" name="accepted_privacy" className="mt-0.5 size-5 shrink-0" />
         <span>
           Li e concordo com a{" "}
           <Link href="/privacidade" className="font-medium text-foreground hover:underline">
@@ -97,7 +97,7 @@ export function SignUpForm() {
         </span>
       </label>
       <label className="flex items-start gap-2 text-sm text-muted-foreground">
-        <input type="checkbox" name="accepted_terms" className="mt-1 size-4" />
+        <input type="checkbox" name="accepted_terms" className="mt-0.5 size-5 shrink-0" />
         <span>
           Li e concordo com os{" "}
           <Link href="/termos" className="font-medium text-foreground hover:underline">

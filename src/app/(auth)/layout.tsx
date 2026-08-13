@@ -13,7 +13,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <p className="text-sm text-muted-foreground">{APP_NAME} · controle financeiro pessoal</p>
         <div className="pointer-events-none absolute -right-16 -bottom-16 size-80 rounded-full bg-primary/70 blur-3xl" />
       </section>
-      <section className="flex items-center justify-center px-6 py-10">
+      <section className="flex min-h-dvh items-start justify-center overflow-y-auto px-4 py-8 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(2rem,env(safe-area-inset-bottom))] sm:items-center sm:px-6">
         <div className="w-full max-w-md">
           <div className="mb-8 lg:hidden">
             <Logo />
