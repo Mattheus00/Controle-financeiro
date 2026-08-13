@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Folio
 
-## Getting Started
+Controle financeiro pessoal: rápido no celular, calmo no desktop. Next.js + Supabase + Vercel.
 
-First, run the development server:
+## Stack
+
+- Next.js App Router, TypeScript, Tailwind, shadcn/ui
+- Supabase (Postgres, Auth, Storage, RLS)
+- Vercel para deploy
+- OCR de comprovantes via `ReceiptProcessor` (OpenAI Vision)
+
+## Começar
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+copy .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Preencha as variáveis do Supabase em `.env.local`. Depois:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npx supabase start
+npx supabase db reset
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Se preferir um projeto remoto, rode as migrations no SQL Editor ou:
 
-## Learn More
+```bash
+npx supabase db push
+```
 
-To learn more about Next.js, take a look at the following resources:
+Abra [http://localhost:3000](http://localhost:3000), crie uma conta e registre o primeiro gasto.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Variáveis de ambiente
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Veja `.env.example`.
 
-## Deploy on Vercel
+| Variável | Onde | Uso |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Client e server | URL do projeto |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Client e server | Chave publicável / anon |
+| `SUPABASE_SERVICE_ROLE_KEY` | Apenas servidor | Operações privilegiadas, se necessário |
+| `OPENAI_API_KEY` | Apenas servidor | Leitura de comprovantes |
+| `NEXT_PUBLIC_APP_URL` | Server | Redirects de auth |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Nunca exponha `SUPABASE_SERVICE_ROLE_KEY` com prefixo `NEXT_PUBLIC_`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Supabase
+
+1. Crie um projeto (região `sa-east-1` se estiver no Brasil).
+2. Authentication → URL Configuration: `http://localhost:3000` e a URL da Vercel.
+3. Redirect URLs: `http://localhost:3000/auth/callback` e `https://SEU_DOMINIO/auth/callback`.
+4. Aplique `supabase/migrations/20260813182428_initial_schema.sql`.
+5. Confirme o bucket `receipts` (privado) e as policies de Storage.
+6. Opcional: `npm run types:generate` com o stack local ligado.
+
+Detalhes do schema: [docs/database.md](docs/database.md).
+
+## Deploy na Vercel
+
+1. Suba o repositório e importe na Vercel.
+2. Defina as mesmas variáveis de `.env.example` (sem secrets no código).
+3. `NEXT_PUBLIC_APP_URL` deve ser a URL de produção.
+4. No Supabase, acrescente a URL da Vercel nas redirect URLs.
+5. Deploy. O app usa Route Handlers e Server Actions, sem backend separado.
+
+## Testes
+
+```bash
+npm test
+```
+
+Cobrem formatação BRL, parcelas, orçamento, ícones, OCR normalizado e validação de transação. O RLS está nas migrations; valide com dois usuários depois de aplicar o schema.
+
+## OCR
+
+O fluxo nunca cadastra gasto sozinho. Upload → compressão/remoção de EXIF → Storage privado → `ReceiptProcessor` → tela de confirmação → transação.
+
+Sem `OPENAI_API_KEY`, o comprovante ainda é salvo e o usuário preenche os dados na mão.
