@@ -104,6 +104,14 @@ function ConfirmForm({
   const amount = extracted.amount
     ? extracted.amount.toLocaleString("pt-BR", { minimumFractionDigits: 2 })
     : "";
+  const hasExtraction = Boolean(
+    extracted.merchant || extracted.amount || extracted.date || extracted.payment_method,
+  );
+  const detailParts = [
+    extracted.date,
+    extracted.payment_method ? PAYMENT_METHOD_LABELS[extracted.payment_method] : null,
+    extracted.suggested_category,
+  ].filter(Boolean);
 
   return (
     <form
@@ -123,24 +131,32 @@ function ConfirmForm({
       }}
     >
       <input type="hidden" name="scanId" value={scanId} />
-      <div className="rounded-3xl bg-secondary p-4">
-        <p className="text-sm text-muted-foreground">Encontramos estas informações:</p>
-        <div className="mt-3 flex items-start gap-3">
-          <MerchantLogo
-            merchantName={extracted.merchant}
-            category={extracted.suggested_category}
-            size="lg"
-          />
-          <div className="min-w-0">
-            <p className="font-display text-2xl">{extracted.merchant || "Estabelecimento"}</p>
-            <p className="text-lg">{amount ? `R$ ${amount}` : "Valor não identificado"}</p>
-            <p className="text-sm text-muted-foreground">
-              {extracted.date} · {extracted.payment_method ? PAYMENT_METHOD_LABELS[extracted.payment_method] : "Pagamento"}
-              {extracted.suggested_category ? ` · ${extracted.suggested_category}` : ""}
-            </p>
+      {hasExtraction ? (
+        <div className="rounded-3xl bg-secondary p-4">
+          <p className="text-sm text-muted-foreground">Encontramos estas informações:</p>
+          <div className="mt-3 flex items-start gap-3">
+            <MerchantLogo
+              merchantName={extracted.merchant}
+              category={extracted.suggested_category}
+              size="lg"
+            />
+            <div className="min-w-0">
+              <p className="font-display text-2xl">{extracted.merchant || "Estabelecimento"}</p>
+              <p className="text-lg">{amount ? `R$ ${amount}` : "Valor não identificado"}</p>
+              {detailParts.length > 0 ? (
+                <p className="text-sm text-muted-foreground">{detailParts.join(" · ")}</p>
+              ) : null}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="rounded-3xl bg-secondary p-4">
+          <p className="font-medium">Não conseguimos ler o comprovante automaticamente.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Sem problema: preencha os dados abaixo e o arquivo fica salvo junto do gasto.
+          </p>
+        </div>
+      )}
       <Field label="Valor" htmlFor="confirm-amount">
         <Input id="confirm-amount" name="amount" defaultValue={amount} required className="h-11" />
       </Field>

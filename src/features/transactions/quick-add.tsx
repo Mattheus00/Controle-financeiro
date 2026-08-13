@@ -75,7 +75,7 @@ function QuickAddControl({ variant }: { variant: "fab" | "button" }) {
       <>
         {trigger}
         <Dialog open={open} onOpenChange={(value) => (value ? setOpen(true) : close())}>
-          <DialogContent className="rounded-3xl sm:max-w-md">
+          <DialogContent className="max-h-[85vh] overflow-y-auto rounded-3xl sm:max-w-md">
             <DialogHeader>
               <DialogTitle>{titleFor(mode)}</DialogTitle>
             </DialogHeader>
@@ -90,11 +90,11 @@ function QuickAddControl({ variant }: { variant: "fab" | "button" }) {
     <>
       {trigger}
       <Drawer open={open} onOpenChange={(value) => (value ? setOpen(true) : close())}>
-        <DrawerContent className="rounded-t-3xl">
+        <DrawerContent className="max-h-[92dvh] rounded-t-3xl">
           <DrawerHeader>
             <DrawerTitle>{titleFor(mode)}</DrawerTitle>
           </DrawerHeader>
-          <div className="px-4 pb-8">{body}</div>
+          <div className="overflow-y-auto px-4 pb-[max(2rem,env(safe-area-inset-bottom))]">{body}</div>
         </DrawerContent>
       </Drawer>
     </>
