@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useTransition, type FormEvent } from "react";
+import { useState, useTransition, type ChangeEvent, type FormEvent } from "react";
+import { Camera, Images } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,63 +38,108 @@ export function ReceiptCapture({ onDone }: { onDone: () => void }) {
     );
   }
 
+  function onPick(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || file.size === 0) {
+      toast.error("Escolha uma foto ou um PDF do comprovante.");
+      return;
+    }
+
+    setStep(0);
+    const timer = window.setInterval(() => {
+      setStep((current) => Math.min(current + 1, STEPS.length - 2));
+    }, 700);
+
+    start(async () => {
+      try {
+        const prepared = await prepareReceiptFile(file);
+        const formData = new FormData();
+        formData.set("file", prepared);
+        const [localExtraction, result] = await Promise.all([
+          readReceiptImage(prepared),
+          processReceiptAction(formData),
+        ]);
+        window.clearInterval(timer);
+        if (!result.success) {
+          toast.error(result.error.message);
+          return;
+        }
+        setStep(STEPS.length - 1);
+        setScanId(result.data.scanId);
+        setExtracted(mergeReceiptExtraction(result.data.extracted, localExtraction));
+      } catch (error) {
+        window.clearInterval(timer);
+        toast.error(receiptPrepareErrorMessage(error));
+      }
+    });
+  }
+
   return (
-    <form
-      className="space-y-4"
-      onSubmit={(event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        setStep(0);
-        const timer = window.setInterval(() => {
-          setStep((current) => Math.min(current + 1, STEPS.length - 2));
-        }, 700);
-        start(async () => {
-          try {
-            const file = formData.get("file");
-            if (!(file instanceof File) || file.size === 0) {
-              window.clearInterval(timer);
-              toast.error("Escolha uma foto ou um PDF do comprovante.");
-              return;
-            }
-            const prepared = await prepareReceiptFile(file);
-            formData.set("file", prepared);
-            const [localExtraction, result] = await Promise.all([
-              readReceiptImage(prepared),
-              processReceiptAction(formData),
-            ]);
-            window.clearInterval(timer);
-            if (!result.success) {
-              toast.error(result.error.message);
-              return;
-            }
-            setStep(STEPS.length - 1);
-            setScanId(result.data.scanId);
-            setExtracted(mergeReceiptExtraction(result.data.extracted, localExtraction));
-          } catch (error) {
-            window.clearInterval(timer);
-            toast.error(receiptPrepareErrorMessage(error));
-          }
-        });
-      }}
-    >
-      <Field label="Foto, galeria ou PDF" htmlFor="file">
-        <Input
-          id="file"
-          name="file"
-          type="file"
-          accept="image/*,application/pdf"
-          capture="environment"
-          required
-          className="h-11"
-        />
-      </Field>
+    <div className="space-y-3" data-vaul-no-drag="">
+      <p className="text-sm text-muted-foreground">
+        Tire uma foto agora ou escolha um comprovante da galeria.
+      </p>
+      <PickerButton
+        icon={Camera}
+        label="Tirar foto"
+        accept="image/*"
+        capture="environment"
+        disabled={pending}
+        onChange={onPick}
+      />
+      <PickerButton
+        icon={Images}
+        label="Galeria ou PDF"
+        accept="image/*,application/pdf"
+        disabled={pending}
+        onChange={onPick}
+        variant="secondary"
+      />
       {pending ? (
         <p className="rounded-2xl bg-secondary px-4 py-3 text-sm">{STEPS[step]}</p>
       ) : null}
-      <Button type="submit" disabled={pending} className="h-11 w-full rounded-2xl">
-        {pending ? "Lendo comprovante..." : "Enviar comprovante"}
-      </Button>
-    </form>
+    </div>
+  );
+}
+
+function PickerButton({
+  icon: Icon,
+  label,
+  accept,
+  capture,
+  disabled,
+  onChange,
+  variant = "primary",
+}: {
+  icon: typeof Camera;
+  label: string;
+  accept: string;
+  capture?: "environment";
+  disabled: boolean;
+  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  variant?: "primary" | "secondary";
+}) {
+  return (
+    <label
+      className={
+        variant === "primary"
+          ? "relative flex h-14 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-2xl bg-primary text-sm font-medium text-primary-foreground has-disabled:pointer-events-none has-disabled:opacity-50"
+          : "relative flex h-14 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-2xl bg-secondary text-sm font-medium text-foreground has-disabled:pointer-events-none has-disabled:opacity-50"
+      }
+      onPointerDown={(event) => event.stopPropagation()}
+    >
+      <Icon className="size-5" />
+      {label}
+      <input
+        type="file"
+        accept={accept}
+        capture={capture}
+        disabled={disabled}
+        onChange={onChange}
+        className="absolute inset-0 cursor-pointer opacity-0"
+      />
+    </label>
   );
 }
 
