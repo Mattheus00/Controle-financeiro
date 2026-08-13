@@ -11,7 +11,7 @@ import {
 } from "@/features/finance/actions";
 import { signOutAction } from "@/features/auth/actions";
 import { todayISO } from "@/lib/date";
-import type { FormAction } from "@/types";
+import { asFormAction } from "@/types";
 import { PrivacyCenter } from "@/features/privacy/privacy-center";
 import { privacyService } from "@/services/privacy-service";
 import {
@@ -39,7 +39,7 @@ export default async function SettingsPage() {
         <p className="text-muted-foreground">Seu perfil, categorias e contas.</p>
       </div>
 
-      <form action={updateProfileAction as FormAction} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
+      <form action={asFormAction(updateProfileAction)} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
         <h2 className="font-display text-2xl md:col-span-2">Perfil</h2>
         <Field label="Nome" htmlFor="name"><Input id="name" name="name" defaultValue={name} required className="h-11" /></Field>
         <Field label="Fuso" htmlFor="timezone">
@@ -59,7 +59,7 @@ export default async function SettingsPage() {
             </li>
           ))}
         </ul>
-        <form action={createAccountAction as FormAction} className="mt-4 grid gap-3 md:grid-cols-2">
+        <form action={asFormAction(createAccountAction)} className="mt-4 grid gap-3 md:grid-cols-2">
           <Field label="Nome" htmlFor="account-name"><Input id="account-name" name="name" required className="h-11" /></Field>
           <Field label="Tipo" htmlFor="type">
             <select id="type" name="type" className="h-11 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm">
@@ -81,7 +81,7 @@ export default async function SettingsPage() {
             <span key={category.id} className="rounded-full bg-muted px-3 py-1 text-sm">{category.name}</span>
           ))}
         </div>
-        <form action={createCategoryAction as FormAction} className="mt-4 grid gap-3 md:grid-cols-2">
+        <form action={asFormAction(createCategoryAction)} className="mt-4 grid gap-3 md:grid-cols-2">
           <Field label="Nova categoria" htmlFor="category-name"><Input id="category-name" name="name" required className="h-11" /></Field>
           <input type="hidden" name="icon" value="CircleDot" />
           <input type="hidden" name="color" value="#84CC16" />
@@ -90,7 +90,7 @@ export default async function SettingsPage() {
         </form>
       </section>
 
-      <form action={createRecurringAction as FormAction} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
+      <form action={asFormAction(createRecurringAction)} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
         <h2 className="font-display text-2xl md:col-span-2">Conta recorrente</h2>
         <Field label="Descrição" htmlFor="description"><Input id="description" name="description" required className="h-11" placeholder="Netflix" /></Field>
         <Field label="Valor" htmlFor="amount"><Input id="amount" name="amount" required className="h-11" /></Field>

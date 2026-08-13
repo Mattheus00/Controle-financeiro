@@ -87,3 +87,11 @@ export type Insight = {
 
 export type FormAction = (formData: FormData) => void | Promise<void>;
 
+export function asFormAction(
+  action: (formData: FormData) => Promise<unknown>,
+): FormAction {
+  return async (formData) => {
+    await action(formData);
+  };
+}
+

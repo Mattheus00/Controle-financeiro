@@ -5,7 +5,7 @@ import { MerchantLogo } from "@/components/merchant/MerchantLogo";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createSubscriptionAction } from "@/features/finance/actions";
-import type { FormAction } from "@/types";
+import { asFormAction } from "@/types";
 
 export default async function SubscriptionsPage() {
   const { supabase, userId } = await requireUser();
@@ -53,7 +53,7 @@ export default async function SubscriptionsPage() {
           })}
         </ul>
       )}
-      <form action={createSubscriptionAction as FormAction} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
+      <form action={asFormAction(createSubscriptionAction)} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
         <h2 className="font-display text-2xl md:col-span-2">Nova assinatura</h2>
         <Field label="Nome" htmlFor="name"><Input id="name" name="name" required className="h-11" placeholder="Netflix" /></Field>
         <Field label="Valor" htmlFor="amount"><Input id="amount" name="amount" required className="h-11" placeholder="R$ 55,90" /></Field>

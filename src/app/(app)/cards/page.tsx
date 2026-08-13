@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createCardAction } from "@/features/finance/actions";
 import { MerchantLogo } from "@/components/merchant/MerchantLogo";
-import type { FormAction } from "@/types";
+import { asFormAction } from "@/types";
 
 export default async function CardsPage() {
   const { supabase, userId } = await requireUser();
@@ -59,7 +59,7 @@ export default async function CardsPage() {
         </div>
       )}
 
-      <form action={createCardAction as FormAction} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
+      <form action={asFormAction(createCardAction)} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
         <h2 className="font-display text-2xl md:col-span-2">Novo cartão</h2>
         <Field label="Nome" htmlFor="name"><Input id="name" name="name" required className="h-11" placeholder="Nubank" /></Field>
         <Field label="Bandeira" htmlFor="brand"><Input id="brand" name="brand" className="h-11" placeholder="Mastercard" /></Field>

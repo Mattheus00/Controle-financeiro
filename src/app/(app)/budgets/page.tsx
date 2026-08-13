@@ -7,7 +7,7 @@ import { EntityIcon } from "@/components/icons/entity-icon";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { upsertBudgetAction } from "@/features/finance/actions";
-import type { FormAction } from "@/types";
+import { asFormAction } from "@/types";
 import { cn } from "@/lib/utils";
 
 const TONE_LABEL = {
@@ -72,7 +72,7 @@ export default async function BudgetsPage() {
           })}
         </div>
       )}
-      <form action={upsertBudgetAction as FormAction} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
+      <form action={asFormAction(upsertBudgetAction)} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
         <h2 className="font-display text-2xl md:col-span-2">Definir limite</h2>
         <input type="hidden" name="month" value={month} />
         <Field label="Categoria" htmlFor="category_id">
