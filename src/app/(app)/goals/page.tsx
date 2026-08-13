@@ -4,7 +4,7 @@ import { EmptyState, Field, MoneyText } from "@/components/ui-kit";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { contributeGoalAction, createGoalAction } from "@/features/finance/actions";
-import { toFormAction } from "@/lib/form-action";
+import type { FormAction } from "@/types";
 
 export default async function GoalsPage() {
   const { supabase, userId } = await requireUser();
@@ -34,7 +34,7 @@ export default async function GoalsPage() {
                   <div className="h-full rounded-full bg-primary transition-all" style={{ width: `${percent}%` }} />
                 </div>
                 <p className="mt-1 text-xs text-muted-foreground">{percent}%</p>
-                <form action={toFormAction(contributeGoalAction)} className="mt-4 flex gap-2">
+                <form action={contributeGoalAction as FormAction} className="mt-4 flex gap-2">
                   <input type="hidden" name="goal_id" value={goal.id} />
                   <Input name="amount" placeholder="R$ 100" className="h-11" />
                   <Button type="submit" className="h-11 rounded-2xl">Guardar</Button>
@@ -44,7 +44,7 @@ export default async function GoalsPage() {
           })}
         </div>
       )}
-      <form action={toFormAction(createGoalAction)} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
+      <form action={createGoalAction as FormAction} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
         <h2 className="font-display text-2xl md:col-span-2">Nova meta</h2>
         <Field label="Nome" htmlFor="name"><Input id="name" name="name" required className="h-11" placeholder="Viagem Japão" /></Field>
         <Field label="Valor" htmlFor="target"><Input id="target" name="target" required className="h-11" placeholder="R$ 25.000" /></Field>

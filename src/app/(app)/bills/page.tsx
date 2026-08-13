@@ -2,7 +2,7 @@ import { requireUser } from "@/lib/supabase/auth";
 import { billService } from "@/services/bill-service";
 import { categoryService } from "@/services/catalog-service";
 import { EmptyState, MoneyText } from "@/components/ui-kit";
-import { EntityIcon } from "@/components/icons/entity-icon";
+import { MerchantLogo } from "@/components/merchant/MerchantLogo";
 import { formatDayMonth } from "@/lib/date";
 import { BILL_STATUS_LABELS, type BillStatus } from "@/types";
 import { PayBillButton } from "@/features/bills/pay-bill-button";
@@ -34,7 +34,12 @@ export default async function BillsPage() {
             const category = bill.category_id ? categoryMap.get(bill.category_id) : undefined;
             return (
               <li key={bill.id} className="flex items-center gap-3 rounded-3xl bg-card px-4 py-3 ring-1 ring-border">
-                <EntityIcon name={bill.icon || category?.icon} label={bill.name} color={category?.color} />
+                <MerchantLogo
+                  merchantName={bill.name}
+                  category={category?.slug}
+                  categoryIcon={bill.icon || category?.icon}
+                  categoryColor={category?.color}
+                />
                 <div className="min-w-0 flex-1">
                   <p className="font-medium">{bill.name}</p>
                   <p className="text-xs text-muted-foreground">{formatDayMonth(bill.due_date)}</p>

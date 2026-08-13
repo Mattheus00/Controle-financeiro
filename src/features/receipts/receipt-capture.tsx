@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, type FormEvent } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { Field } from "@/components/ui-kit";
 import { confirmReceiptAction, processReceiptAction } from "@/features/receipts/actions";
 import { todayISO } from "@/lib/date";
 import { PAYMENT_METHOD_LABELS, type ReceiptExtraction } from "@/types";
+import { MerchantLogo } from "@/components/merchant/MerchantLogo";
 
 const STEPS = [
   "Analisando seu comprovante...",
@@ -36,7 +37,9 @@ export function ReceiptCapture({ onDone }: { onDone: () => void }) {
   return (
     <form
       className="space-y-4"
-      action={(formData) => {
+      onSubmit={(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
         setStep(0);
         const timer = window.setInterval(() => {
           setStep((current) => Math.min(current + 1, STEPS.length - 2));
@@ -92,7 +95,9 @@ function ConfirmForm({
   return (
     <form
       className="space-y-4"
-      action={(formData) => {
+      onSubmit={(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
         start(async () => {
           const result = await confirmReceiptAction(formData);
           if (!result.success) {
@@ -107,11 +112,21 @@ function ConfirmForm({
       <input type="hidden" name="scanId" value={scanId} />
       <div className="rounded-3xl bg-secondary p-4">
         <p className="text-sm text-muted-foreground">Encontramos estas informações:</p>
-        <p className="mt-2 font-display text-2xl">{extracted.merchant || "Estabelecimento"}</p>
-        <p className="text-lg">{amount ? `R$ ${amount}` : "Valor não identificado"}</p>
-        <p className="text-sm text-muted-foreground">
-          {extracted.date} · {extracted.payment_method ? PAYMENT_METHOD_LABELS[extracted.payment_method] : "Pagamento"}
-        </p>
+        <div className="mt-3 flex items-start gap-3">
+          <MerchantLogo
+            merchantName={extracted.merchant}
+            category={extracted.suggested_category}
+            size="lg"
+          />
+          <div className="min-w-0">
+            <p className="font-display text-2xl">{extracted.merchant || "Estabelecimento"}</p>
+            <p className="text-lg">{amount ? `R$ ${amount}` : "Valor não identificado"}</p>
+            <p className="text-sm text-muted-foreground">
+              {extracted.date} · {extracted.payment_method ? PAYMENT_METHOD_LABELS[extracted.payment_method] : "Pagamento"}
+              {extracted.suggested_category ? ` · ${extracted.suggested_category}` : ""}
+            </p>
+          </div>
+        </div>
       </div>
       <Field label="Valor" htmlFor="confirm-amount">
         <Input id="confirm-amount" name="amount" defaultValue={amount} required className="h-11" />

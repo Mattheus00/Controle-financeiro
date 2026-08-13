@@ -1,11 +1,11 @@
 import { requireUser } from "@/lib/supabase/auth";
 import { subscriptionService, categoryService } from "@/services/catalog-service";
 import { EmptyState, Field, MoneyText } from "@/components/ui-kit";
-import { EntityIcon } from "@/components/icons/entity-icon";
+import { MerchantLogo } from "@/components/merchant/MerchantLogo";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createSubscriptionAction } from "@/features/finance/actions";
-import { toFormAction } from "@/lib/form-action";
+import type { FormAction } from "@/types";
 
 export default async function SubscriptionsPage() {
   const { supabase, userId } = await requireUser();
@@ -38,7 +38,11 @@ export default async function SubscriptionsPage() {
             const category = item.category_id ? categoryMap.get(item.category_id) : undefined;
             return (
               <li key={item.id} className="flex items-center gap-3 rounded-3xl bg-card px-4 py-3 ring-1 ring-border">
-                <EntityIcon name={item.icon || category?.icon} label={item.name} />
+                <MerchantLogo
+                  merchantName={item.merchant || item.name}
+                  category={category?.slug}
+                  categoryIcon={item.icon || category?.icon}
+                />
                 <div className="flex-1">
                   <p className="font-medium">{item.name}</p>
                   <p className="text-xs text-muted-foreground">Todo dia {item.billing_day}</p>
@@ -49,7 +53,7 @@ export default async function SubscriptionsPage() {
           })}
         </ul>
       )}
-      <form action={toFormAction(createSubscriptionAction)} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
+      <form action={createSubscriptionAction as FormAction} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
         <h2 className="font-display text-2xl md:col-span-2">Nova assinatura</h2>
         <Field label="Nome" htmlFor="name"><Input id="name" name="name" required className="h-11" placeholder="Netflix" /></Field>
         <Field label="Valor" htmlFor="amount"><Input id="amount" name="amount" required className="h-11" placeholder="R$ 55,90" /></Field>

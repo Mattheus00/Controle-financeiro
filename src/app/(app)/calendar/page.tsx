@@ -3,7 +3,7 @@ import { billService } from "@/services/bill-service";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { MoneyText } from "@/components/ui-kit";
-import { EntityIcon } from "@/components/icons/entity-icon";
+import { MerchantLogo } from "@/components/merchant/MerchantLogo";
 
 export default async function CalendarPage() {
   const { supabase, userId } = await requireUser();
@@ -28,7 +28,7 @@ export default async function CalendarPage() {
               <div className="mt-2 space-y-2">
                 {dayBills.map((bill) => (
                   <div key={bill.id} className="flex items-center gap-2">
-                    <EntityIcon name={bill.icon} label={bill.name} className="size-8 rounded-xl" />
+                    <MerchantLogo merchantName={bill.name} categoryIcon={bill.icon} size="sm" />
                     <div className="min-w-0">
                       <p className="truncate text-xs font-medium">{bill.name}</p>
                       <MoneyText cents={bill.amount_cents} className="text-xs" />

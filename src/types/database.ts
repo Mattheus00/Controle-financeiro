@@ -431,9 +431,155 @@ export type Database = {
         Update: Partial<Database["public"]["Tables"]["receipt_scans"]["Insert"]>;
         Relationships: [];
       };
+      merchant_brands: {
+        Row: {
+          id: string;
+          name: string;
+          slug: string;
+          logo_path: string | null;
+          category_slug: string | null;
+          aliases: string[];
+          website: string | null;
+          background_color: string | null;
+          foreground_color: string | null;
+          is_verified: boolean;
+          is_active: boolean;
+        } & Timestamps;
+        Insert: {
+          name: string;
+          slug: string;
+          logo_path?: string | null;
+          category_slug?: string | null;
+          aliases?: string[];
+          website?: string | null;
+          background_color?: string | null;
+          foreground_color?: string | null;
+          is_verified?: boolean;
+          is_active?: boolean;
+        };
+        Update: Partial<Database["public"]["Tables"]["merchant_brands"]["Insert"]>;
+        Relationships: [];
+      };
+      user_merchant_rules: {
+        Row: {
+          id: string;
+          user_id: string;
+          merchant_pattern: string;
+          custom_name: string | null;
+          category_id: string | null;
+          custom_icon: string | null;
+        } & Timestamps;
+        Insert: {
+          user_id: string;
+          merchant_pattern: string;
+          custom_name?: string | null;
+          category_id?: string | null;
+          custom_icon?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["user_merchant_rules"]["Insert"]>;
+        Relationships: [];
+      };
+      user_consents: {
+        Row: {
+          id: string;
+          user_id: string;
+          consent_type: "privacy_policy" | "terms_of_use" | "marketing_email";
+          policy_version: string;
+          granted: boolean;
+          granted_at: string | null;
+          revoked_at: string | null;
+          source: string;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          consent_type: "privacy_policy" | "terms_of_use" | "marketing_email";
+          policy_version: string;
+          granted: boolean;
+          granted_at?: string | null;
+          revoked_at?: string | null;
+          source?: string;
+        };
+        Update: Partial<Database["public"]["Tables"]["user_consents"]["Insert"]>;
+        Relationships: [];
+      };
+      audit_events: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          event_type: string;
+          metadata_minimal: Json;
+          created_at: string;
+        };
+        Insert: {
+          user_id?: string | null;
+          event_type: string;
+          metadata_minimal?: Json;
+        };
+        Update: Partial<Database["public"]["Tables"]["audit_events"]["Insert"]>;
+        Relationships: [];
+      };
+      privacy_requests: {
+        Row: {
+          id: string;
+          user_id: string;
+          type: string;
+          status: string;
+          created_at: string;
+          completed_at: string | null;
+          message: string | null;
+        };
+        Insert: {
+          user_id: string;
+          type: string;
+          status?: string;
+          message?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["privacy_requests"]["Insert"]>;
+        Relationships: [];
+      };
+      data_export_jobs: {
+        Row: {
+          id: string;
+          user_id: string;
+          status: string;
+          storage_path: string | null;
+          error_code: string | null;
+          created_at: string;
+          completed_at: string | null;
+          expires_at: string | null;
+        };
+        Insert: {
+          user_id: string;
+          status?: string;
+          storage_path?: string | null;
+          error_code?: string | null;
+          completed_at?: string | null;
+          expires_at?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["data_export_jobs"]["Insert"]>;
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      check_rate_limit: {
+        Args: { p_key: string; p_max: number; p_window_seconds: number };
+        Returns: boolean;
+      };
+      write_audit_event: {
+        Args: { p_event_type: string; p_metadata?: Json };
+        Returns: undefined;
+      };
+      delete_own_account: {
+        Args: Record<string, never>;
+        Returns: undefined;
+      };
+      purge_expired_exports: {
+        Args: Record<string, never>;
+        Returns: number;
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };

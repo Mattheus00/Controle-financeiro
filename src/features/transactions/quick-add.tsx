@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, type FormEvent, type MouseEvent } from "react";
 import { Camera, Plus, Repeat, Wallet, ArrowLeftRight } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -44,18 +44,23 @@ function QuickAddControl({ variant }: { variant: "fab" | "button" }) {
     setTimeout(() => setMode("menu"), 200);
   }
 
+  function openSheet(event: MouseEvent<HTMLButtonElement>) {
+    event.currentTarget.blur();
+    setOpen(true);
+  }
+
   const trigger =
     variant === "fab" ? (
       <button
         type="button"
-        onClick={() => setOpen(true)}
+        onClick={openSheet}
         className="grid size-14 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_12px_30px_-10px_oklch(0.72_0.18_125)] transition hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring"
         aria-label="Novo lançamento"
       >
         <Plus className="size-7" />
       </button>
     ) : (
-      <Button size="lg" className="h-11 rounded-2xl px-4" onClick={() => setOpen(true)}>
+      <Button size="lg" className="h-11 rounded-2xl px-4" onClick={openSheet}>
         <Plus className="size-4" />
         Novo gasto
       </Button>
@@ -182,7 +187,9 @@ function ExpenseForm({ onDone }: { onDone: () => void }) {
   return (
     <form
       className="space-y-4"
-      action={(formData) => {
+      onSubmit={(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
         start(async () => {
           const result = await createQuickExpenseAction(formData);
           if (!result.success) {
@@ -236,7 +243,9 @@ function SimpleTransactionForm({
   return (
     <form
       className="space-y-4"
-      action={(formData) => {
+      onSubmit={(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
         formData.set("type", type);
         start(async () => {
           const result = await createTransactionAction(formData);
@@ -271,7 +280,9 @@ function BillForm({ onDone }: { onDone: () => void }) {
   return (
     <form
       className="space-y-4"
-      action={(formData) => {
+      onSubmit={(event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
         start(async () => {
           const result = await createBillAction(formData);
           if (!result.success) {

@@ -1,12 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
-import { APP_DESCRIPTION, APP_NAME, APP_TAGLINE } from "@/lib/config";
+import { Fraunces, Inter } from "next/font/google";
+import { APP_DESCRIPTION, APP_NAME, LANDING_TITLE } from "@/lib/config";
 import { Providers } from "@/components/providers";
 import "./globals.css";
 
-const sans = Plus_Jakarta_Sans({
+const sans = Inter({
   subsets: ["latin"],
-  variable: "--font-plus-jakarta",
+  variable: "--font-inter",
   display: "swap",
 });
 
@@ -16,13 +16,37 @@ const display = Fraunces({
   display: "swap",
 });
 
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(appUrl),
   title: {
-    default: APP_NAME,
+    default: LANDING_TITLE,
     template: `%s · ${APP_NAME}`,
   },
-  description: `${APP_TAGLINE} ${APP_DESCRIPTION}`,
+  description: APP_DESCRIPTION,
   applicationName: APP_NAME,
+  keywords: [
+    "controle financeiro",
+    "gastos pessoais",
+    "orçamento",
+    "comprovante",
+    "finanças",
+    "Folio",
+  ],
+  authors: [{ name: APP_NAME }],
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: APP_NAME,
+    title: LANDING_TITLE,
+    description: APP_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: LANDING_TITLE,
+    description: APP_DESCRIPTION,
+  },
   appleWebApp: {
     capable: true,
     title: APP_NAME,
@@ -32,10 +56,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#E8F7B0",
+  themeColor: "#B7E34B",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

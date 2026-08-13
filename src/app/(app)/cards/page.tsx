@@ -5,7 +5,8 @@ import { EmptyState, Field, MoneyText } from "@/components/ui-kit";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createCardAction } from "@/features/finance/actions";
-import { toFormAction } from "@/lib/form-action";
+import { MerchantLogo } from "@/components/merchant/MerchantLogo";
+import type { FormAction } from "@/types";
 
 export default async function CardsPage() {
   const { supabase, userId } = await requireUser();
@@ -24,10 +25,13 @@ export default async function CardsPage() {
         <div className="grid gap-4 md:grid-cols-2">
           {cards.map((card) => (
             <Card key={card.id} className="rounded-3xl">
-              <CardHeader>
-                <p className="text-sm text-muted-foreground">{card.brand || "Cartão"}</p>
-                <h2 className="font-display text-2xl">{card.name}</h2>
-                <p className="text-muted-foreground">**** {card.last_four ?? "----"}</p>
+              <CardHeader className="flex flex-row items-start gap-3">
+                <MerchantLogo merchantName={card.brand || card.name} size="lg" />
+                <div>
+                  <p className="text-sm text-muted-foreground">{card.brand || "Cartão"}</p>
+                  <h2 className="font-display text-2xl">{card.name}</h2>
+                  <p className="text-muted-foreground">**** {card.last_four ?? "----"}</p>
+                </div>
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="flex justify-between text-sm">
@@ -55,7 +59,7 @@ export default async function CardsPage() {
         </div>
       )}
 
-      <form action={toFormAction(createCardAction)} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
+      <form action={createCardAction as FormAction} className="grid gap-3 rounded-3xl bg-card p-5 ring-1 ring-border md:grid-cols-2">
         <h2 className="font-display text-2xl md:col-span-2">Novo cartão</h2>
         <Field label="Nome" htmlFor="name"><Input id="name" name="name" required className="h-11" placeholder="Nubank" /></Field>
         <Field label="Bandeira" htmlFor="brand"><Input id="brand" name="brand" className="h-11" placeholder="Mastercard" /></Field>

@@ -17,22 +17,27 @@ export function MobileNav() {
   const pathname = usePathname();
 
   return (
-    <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 pb-safe backdrop-blur lg:hidden"
-      aria-label="Navegação inferior"
-    >
-      <div className="grid grid-cols-5 items-end px-2 pt-2">
-        {ITEMS.slice(0, 2).map((item) => (
-          <MobileLink key={item.href} {...item} active={pathname.startsWith(item.href)} />
-        ))}
-        <div className="-mt-7 flex justify-center">
+    <div className="fixed inset-x-0 bottom-0 z-40 lg:hidden">
+      <nav
+        className="border-t border-border bg-background/95 pb-safe backdrop-blur"
+        aria-label="Navegação inferior"
+      >
+        <div className="grid grid-cols-5 items-end px-2 pt-2">
+          {ITEMS.slice(0, 2).map((item) => (
+            <MobileLink key={item.href} {...item} active={pathname.startsWith(item.href)} />
+          ))}
+          <div className="h-14" />
+          {ITEMS.slice(2).map((item) => (
+            <MobileLink key={item.href} {...item} active={pathname.startsWith(item.href)} />
+          ))}
+        </div>
+      </nav>
+      <div className="pointer-events-none absolute inset-x-0 -top-7 flex justify-center">
+        <div className="pointer-events-auto">
           <QuickAdd />
         </div>
-        {ITEMS.slice(2).map((item) => (
-          <MobileLink key={item.href} {...item} active={pathname.startsWith(item.href)} />
-        ))}
       </div>
-    </nav>
+    </div>
   );
 }
 

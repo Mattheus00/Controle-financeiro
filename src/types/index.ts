@@ -84,3 +84,6 @@ export type Insight = {
   id: string;
   message: string;
 };
+
+export type FormAction = (formData: FormData) => void | Promise<void>;
+

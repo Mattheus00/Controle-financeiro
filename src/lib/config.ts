@@ -1,7 +1,12 @@
 export const APP_NAME = "Folio";
 export const APP_TAGLINE = "Entenda para onde seu dinheiro está indo.";
 export const APP_DESCRIPTION =
-  "Controle seus gastos, acompanhe suas metas e tome decisões melhores sem planilhas complicadas.";
+  "Organize gastos, contas, cartões, assinaturas e metas em um só lugar. Fotografe comprovantes e deixe o Folio ajudar a registrar suas despesas.";
+export const APP_MICROCOPY = "Simples de começar. Sem planilhas complicadas.";
+export const APP_SLOGAN = "Menos planilhas. Mais clareza.";
+export const LANDING_TITLE = "Folio — Controle financeiro pessoal simples e inteligente";
+export const PRICING_FAQ_ANSWER =
+  "Você pode começar agora, sem cartão. Enquanto o Folio está em lançamento, o acesso inicial é gratuito.";
 
 export const DEFAULT_CURRENCY = "BRL";
 export const DEFAULT_LOCALE = "pt-BR";
