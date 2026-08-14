@@ -47,13 +47,10 @@ export function PrivacyCenter({
 }) {
   return (
     <section className="space-y-6 rounded-3xl bg-card p-5 ring-1 ring-border">
-      <div>
-        <h2 className="font-display text-2xl">Privacidade e dados</h2>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Seus dados financeiros ficam ligados à sua conta. Comprovantes ficam em área privada. Versão
-          das políticas: {POLICY_VERSION}.
-        </p>
-      </div>
+      <p className="text-sm text-muted-foreground">
+        Seus dados financeiros ficam ligados à sua conta. Comprovantes ficam em área privada. Versão
+        das políticas: {POLICY_VERSION}.
+      </p>
 
       <div className="rounded-2xl bg-muted px-4 py-3 text-sm">
         <p className="font-medium">Seus dados</p>
@@ -73,12 +70,16 @@ export function PrivacyCenter({
         ) : null}
       </div>
 
-      <ExportForm />
+      <div id="exportar">
+        <ExportForm />
+      </div>
       <DeleteReceiptsForm />
       <DeleteHistoryForm />
       <CookiePreferences />
       <MarketingNote />
-      <DeleteAccountForm />
+      <div id="excluir">
+        <DeleteAccountForm />
+      </div>
 
       <div className="flex flex-wrap gap-4 text-sm">
         <Link href="/privacidade" className="font-medium underline-offset-4 hover:underline">
@@ -119,7 +120,7 @@ function ActionResult({ message, tone }: { message: string | null; tone: "ok" | 
   return <p className={`text-sm ${tone === "err" ? "text-danger" : "text-muted-foreground"}`}>{message}</p>;
 }
 
-function ExportForm() {
+export function ExportForm() {
   const [pending, start] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const [tone, setTone] = useState<"ok" | "err">("ok");
@@ -240,7 +241,7 @@ function MarketingNote() {
   );
 }
 
-function DeleteAccountForm() {
+export function DeleteAccountForm() {
   const [pending, start] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
 

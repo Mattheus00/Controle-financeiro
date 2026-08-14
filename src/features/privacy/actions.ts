@@ -60,6 +60,7 @@ export async function deleteHistoryAction(formData: FormData) {
   const result = await privacyService.deleteHistory(auth.supabase, auth.userId);
   if (result.success) {
     revalidatePath("/settings");
+    revalidatePath("/settings/privacy");
     revalidatePath("/dashboard");
     revalidatePath("/transactions");
   }
