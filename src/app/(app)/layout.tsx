@@ -3,6 +3,7 @@ import { AppSidebar } from "@/components/layout/app-sidebar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { DesktopQuickAdd } from "@/features/transactions/quick-add";
 import { recurringService } from "@/services/recurring-service";
+import { PresenceTracker } from "@/features/admin/presence-tracker";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const { supabase, userId } = await requireUser();
@@ -15,6 +16,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-dvh bg-background lg:flex">
+      <PresenceTracker userId={userId} />
       <AppSidebar
         name={profile?.name || "Você"}
         email={userData.user?.email ?? ""}

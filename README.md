@@ -46,6 +46,30 @@ Veja `.env.example`.
 
 Nunca exponha `SUPABASE_SERVICE_ROLE_KEY` com prefixo `NEXT_PUBLIC_`.
 
+## Painel administrativo
+
+O painel fica em `/admin` e usa a mesma autenticação do aplicativo. O acesso é liberado somente para
+contas presentes em `public.user_roles`; não existe administrador fixo no código ou na migration.
+
+Para cadastrar o primeiro administrador, localize o UUID da conta em **Authentication > Users** no
+Supabase e execute no SQL Editor:
+
+```sql
+insert into public.user_roles (user_id, role)
+values ('UUID_DA_CONTA', 'admin')
+on conflict (user_id) do update set role = excluded.role;
+```
+
+Para remover o acesso:
+
+```sql
+delete from public.user_roles where user_id = 'UUID_DA_CONTA';
+```
+
+O contador “Online agora” usa um canal privado do Supabase Presence. Em **Realtime Settings**, mantenha
+a autorização de canais privados habilitada. Respostas de solicitações usam `RESEND_API_KEY` e
+`RESEND_FROM_EMAIL`; se o envio falhar, a solicitação permanece em atendimento para nova tentativa.
+
 ## Supabase
 
 1. Crie um projeto (região `sa-east-1` se estiver no Brasil).

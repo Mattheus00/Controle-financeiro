@@ -35,6 +35,7 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   serverExternalPackages: ["sharp"],
   experimental: {
+    authInterrupts: true,
     serverActions: {
       bodySizeLimit: "4mb",
     },

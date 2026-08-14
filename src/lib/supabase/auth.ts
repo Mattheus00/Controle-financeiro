@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
-import { redirect } from "next/navigation";
+import { forbidden, redirect } from "next/navigation";
 
 export async function requireUser(): Promise<{
   supabase: SupabaseClient<Database>;
@@ -26,4 +26,25 @@ export async function getOptionalUser() {
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   return { supabase, userId: data?.claims?.sub ?? null };
+}
+
+export async function getAdminContext() {
+  const context = await requireUser();
+  const { data, error } = await context.supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", context.userId)
+    .eq("role", "admin")
+    .maybeSingle();
+
+  return {
+    ...context,
+    isAdmin: !error && data?.role === "admin",
+  };
+}
+
+export async function requireAdmin() {
+  const context = await getAdminContext();
+  if (!context.isAdmin) forbidden();
+  return context;
 }

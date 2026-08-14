@@ -527,15 +527,44 @@ export type Database = {
           status: string;
           created_at: string;
           completed_at: string | null;
+          notes_internal: string | null;
           message: string | null;
+          assigned_admin_id: string | null;
+          admin_response: string | null;
+          resolution_status: string | null;
+          responded_at: string | null;
+          response_delivery_status: string;
+          response_delivery_error_code: string | null;
         };
         Insert: {
           user_id: string;
           type: string;
           status?: string;
           message?: string | null;
+          notes_internal?: string | null;
+          assigned_admin_id?: string | null;
+          admin_response?: string | null;
+          resolution_status?: string | null;
+          responded_at?: string | null;
+          response_delivery_status?: string;
+          response_delivery_error_code?: string | null;
         };
         Update: Partial<Database["public"]["Tables"]["privacy_requests"]["Insert"]>;
+        Relationships: [];
+      };
+      user_roles: {
+        Row: {
+          user_id: string;
+          role: "admin";
+          created_at: string;
+          created_by: string | null;
+        };
+        Insert: {
+          user_id: string;
+          role: "admin";
+          created_by?: string | null;
+        };
+        Update: Partial<Database["public"]["Tables"]["user_roles"]["Insert"]>;
         Relationships: [];
       };
       data_export_jobs: {
@@ -590,6 +619,39 @@ export type Database = {
       purge_expired_exports: {
         Args: Record<string, never>;
         Returns: number;
+      };
+      admin_dashboard_metrics: {
+        Args: Record<string, never>;
+        Returns: Json;
+      };
+      admin_list_privacy_requests: {
+        Args: { p_status?: string | null };
+        Returns: {
+          request_id: string;
+          customer_name: string;
+          request_type: string;
+          request_status: string;
+          request_message: string | null;
+          request_created_at: string;
+          assigned_to_current_admin: boolean;
+          response_message: string | null;
+          response_resolution: string | null;
+          delivery_status: string;
+          delivery_error_code: string | null;
+          response_sent_at: string | null;
+        }[];
+      };
+      admin_start_privacy_request: {
+        Args: { p_request_id: string };
+        Returns: boolean;
+      };
+      admin_prepare_privacy_response: {
+        Args: { p_request_id: string; p_resolution: string; p_response: string };
+        Returns: Json;
+      };
+      admin_finish_privacy_response: {
+        Args: { p_request_id: string; p_sent: boolean; p_error_code?: string | null };
+        Returns: boolean;
       };
     };
     Enums: Record<string, never>;
