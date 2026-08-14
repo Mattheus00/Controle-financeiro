@@ -31,6 +31,7 @@ export async function confirmReceiptAction(formData: FormData) {
     payment_method: formData.get("payment_method") || "pix",
     account_id: String(formData.get("account_id") || "") || null,
     credit_card_id: String(formData.get("credit_card_id") || "") || null,
+    installment_total: Number(formData.get("installment_total") || 1),
   });
   if (!parsed.success) return fail("VALIDATION_ERROR", parsed.error.issues[0]?.message ?? "Revise os dados.");
 
@@ -44,11 +45,13 @@ export async function confirmReceiptAction(formData: FormData) {
     payment_method: parsed.data.payment_method,
     account_id: parsed.data.account_id,
     credit_card_id: parsed.data.credit_card_id,
+    installment_total: parsed.data.installment_total,
   });
 
   if (result.success) {
     revalidatePath("/dashboard");
     revalidatePath("/transactions");
+    revalidatePath("/cards");
   }
   return result;
 }

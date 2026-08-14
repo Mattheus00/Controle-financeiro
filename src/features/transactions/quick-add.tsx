@@ -21,6 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Field } from "@/components/ui-kit";
 import { createQuickExpenseAction, createTransactionAction, createBillAction } from "@/features/finance/actions";
 import { ReceiptCapture } from "@/features/receipts/receipt-capture";
+import { ExpensePaymentFields } from "@/features/transactions/payment-fields";
 import { todayISO } from "@/lib/date";
 import { useMediaQuery } from "@/hooks/use-media-query";
 
@@ -210,21 +211,10 @@ function ExpenseForm({ onDone }: { onDone: () => void }) {
       <Field label="Descrição" htmlFor="description">
         <Input id="description" name="description" placeholder="Opcional" className="h-11" />
       </Field>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <Field label="Pagamento" htmlFor="payment_method">
-          <select id="payment_method" name="payment_method" defaultValue="pix" className="h-11 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm">
-            <option value="pix">PIX</option>
-            <option value="cash">Dinheiro</option>
-            <option value="debit">Débito</option>
-            <option value="credit">Crédito</option>
-            <option value="boleto">Boleto</option>
-            <option value="other">Outros</option>
-          </select>
-        </Field>
-        <Field label="Data" htmlFor="date">
-          <Input id="date" name="date" type="date" defaultValue={todayISO()} className="h-11" />
-        </Field>
-      </div>
+      <ExpensePaymentFields />
+      <Field label="Data" htmlFor="date">
+        <Input id="date" name="date" type="date" defaultValue={todayISO()} className="h-11" />
+      </Field>
       <Button type="submit" disabled={pending} className="h-11 w-full rounded-2xl">
         {pending ? "Salvando..." : "Registrar gasto"}
       </Button>

@@ -13,6 +13,7 @@ import { readReceiptImage } from "@/lib/read-receipt-image";
 import { todayISO } from "@/lib/date";
 import { PAYMENT_METHOD_LABELS, type ReceiptExtraction } from "@/types";
 import { MerchantLogo } from "@/components/merchant/MerchantLogo";
+import { ExpensePaymentFields } from "@/features/transactions/payment-fields";
 
 const STEPS = [
   "Lendo o texto da foto...",
@@ -218,26 +219,13 @@ function ConfirmForm({
       <Field label="Descrição" htmlFor="confirm-description">
         <Input id="confirm-description" name="description" defaultValue={extracted.description ?? extracted.merchant ?? ""} className="h-11" />
       </Field>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <Field label="Data" htmlFor="confirm-date">
-          <Input id="confirm-date" name="date" type="date" defaultValue={extracted.date ?? todayISO()} className="h-11" />
-        </Field>
-        <Field label="Pagamento" htmlFor="confirm-payment">
-          <select
-            id="confirm-payment"
-            name="payment_method"
-            defaultValue={extracted.payment_method ?? "pix"}
-            className="h-11 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm"
-          >
-            <option value="pix">PIX</option>
-            <option value="credit">Crédito</option>
-            <option value="debit">Débito</option>
-            <option value="boleto">Boleto</option>
-            <option value="cash">Dinheiro</option>
-            <option value="other">Outros</option>
-          </select>
-        </Field>
-      </div>
+      <Field label="Data" htmlFor="confirm-date">
+        <Input id="confirm-date" name="date" type="date" defaultValue={extracted.date ?? todayISO()} className="h-11" />
+      </Field>
+      <ExpensePaymentFields
+        idPrefix="confirm-"
+        defaultPaymentMethod={extracted.payment_method ?? "pix"}
+      />
       <Button type="submit" disabled={pending} className="h-11 w-full rounded-2xl">
         {pending ? "Confirmando..." : "Confirmar gasto"}
       </Button>

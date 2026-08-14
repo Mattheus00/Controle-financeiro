@@ -82,6 +82,16 @@ export const cardService = {
     if (error || !data) return fail("CARD_CREATE_FAILED", "Não foi possível criar o cartão.");
     return ok(data);
   },
+  async listOptions(supabase: Client, userId: string) {
+    const { data, error } = await supabase
+      .from("credit_cards")
+      .select("id, name, brand, last_four")
+      .eq("user_id", userId)
+      .eq("is_active", true)
+      .order("name");
+    if (error) return fail("CARD_LIST_FAILED", "Não foi possível carregar os cartões.");
+    return ok(data ?? []);
+  },
 };
 
 export const categoryService = {

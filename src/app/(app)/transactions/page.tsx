@@ -1,12 +1,13 @@
 import { requireUser } from "@/lib/supabase/auth";
 import { transactionService } from "@/services/transaction-service";
-import { categoryService } from "@/services/catalog-service";
+import { categoryService, cardService } from "@/services/catalog-service";
 import { EmptyState, MoneyText } from "@/components/ui-kit";
 import { MerchantLogo } from "@/components/merchant/MerchantLogo";
 import { formatDateBR } from "@/lib/date";
 import { PAYMENT_METHOD_LABELS, TRANSACTION_TYPE_LABELS } from "@/types";
 import { TransactionFilters } from "@/features/transactions/filters";
 import { transactionFilterSchema } from "@/validations/transaction";
+import { creditCardLabel } from "@/features/cards/card-label";
 
 export default async function TransactionsPage({
   searchParams,
@@ -21,13 +22,15 @@ export default async function TransactionsPage({
     to: params.to || undefined,
   });
   const { supabase, userId } = await requireUser();
-  const [categories, result] = await Promise.all([
+  const [categories, cards, result] = await Promise.all([
     categoryService.list(supabase, userId),
+    cardService.listOptions(supabase, userId),
     transactionService.list(supabase, userId, filters.success ? filters.data : {}),
   ]);
 
   const rows = result.success ? result.data : [];
   const categoryMap = new Map((categories.success ? categories.data : []).map((item) => [item.id, item]));
+  const cardMap = new Map((cards.success ? cards.data : []).map((item) => [item.id, item]));
 
   return (
     <div className="space-y-6">
@@ -45,6 +48,7 @@ export default async function TransactionsPage({
         <ul className="space-y-2">
           {rows.map((row) => {
             const category = row.category_id ? categoryMap.get(row.category_id) : undefined;
+            const card = row.credit_card_id ? cardMap.get(row.credit_card_id) : undefined;
             return (
               <li key={row.id} className="flex items-center gap-3 rounded-3xl bg-card px-4 py-3 ring-1 ring-border">
                 <MerchantLogo
@@ -63,6 +67,7 @@ export default async function TransactionsPage({
                       {row.payment_method
                         ? ` · ${PAYMENT_METHOD_LABELS[row.payment_method as keyof typeof PAYMENT_METHOD_LABELS]}`
                         : ""}
+                      {card ? ` · ${creditCardLabel(card)}` : ""}
                       {row.installment_number && row.installment_total
                         ? ` · ${row.installment_number}/${row.installment_total}`
                         : ""}
