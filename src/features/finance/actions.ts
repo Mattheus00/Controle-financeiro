@@ -32,6 +32,7 @@ import {
 } from "@/services/catalog-service";
 
 function revalidateFinance() {
+  revalidatePath("/", "layout");
   revalidatePath("/dashboard");
   revalidatePath("/transactions");
   revalidatePath("/bills");
@@ -86,8 +87,9 @@ export async function createQuickExpenseAction(formData: FormData) {
     description: String(formData.get("description") ?? formData.get("merchant") ?? "Gasto"),
     account_id: emptyToNull(formData.get("account_id")),
     credit_card_id: emptyToNull(formData.get("credit_card_id")),
+    installment_total: Number(formData.get("installment_total") || 1),
   });
-  if (!parsed.success) return fail("VALIDATION_ERROR", "Revise os dados do gasto.");
+  if (!parsed.success) return fail("VALIDATION_ERROR", parsed.error.issues[0]?.message ?? "Revise os dados do gasto.");
   const result = await transactionService.create(supabase, userId, {
     type: "expense",
     description: parsed.data.description || parsed.data.merchant || "Gasto",
@@ -98,6 +100,7 @@ export async function createQuickExpenseAction(formData: FormData) {
     payment_method: parsed.data.payment_method,
     account_id: parsed.data.account_id,
     credit_card_id: parsed.data.credit_card_id,
+    installment_total: parsed.data.installment_total,
   });
   if (result.success) revalidateFinance();
   return result;

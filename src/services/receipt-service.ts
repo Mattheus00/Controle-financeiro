@@ -127,6 +127,7 @@ export const receiptService = {
       payment_method?: string | null;
       account_id?: string | null;
       credit_card_id?: string | null;
+      installment_total?: number;
       icon?: string | null;
     },
   ) {
@@ -149,6 +150,7 @@ export const receiptService = {
       payment_method: input.payment_method as never,
       account_id: input.account_id,
       credit_card_id: input.credit_card_id,
+      installment_total: input.installment_total,
       icon: input.icon,
     });
 

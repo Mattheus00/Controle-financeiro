@@ -38,6 +38,13 @@ export const transactionSchema = z
         message: "Escolha a conta de destino.",
       });
     }
+    if (value.payment_method === "credit" && !value.credit_card_id) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["credit_card_id"],
+        message: "Escolha o cartão desta compra.",
+      });
+    }
   });
 
 export const transactionFilterSchema = z.object({
@@ -54,16 +61,27 @@ export const transactionFilterSchema = z.object({
   max_cents: z.coerce.number().optional(),
 });
 
-export const quickExpenseSchema = z.object({
-  amount_cents: z.number().int().positive(),
-  merchant: z.string().max(120).optional(),
-  category_id: z.string().uuid().nullable().optional(),
-  payment_method: paymentMethodSchema.optional(),
-  date: z.string().min(10),
-  description: z.string().max(120).optional(),
-  account_id: z.string().uuid().nullable().optional(),
-  credit_card_id: z.string().uuid().nullable().optional(),
-});
+export const quickExpenseSchema = z
+  .object({
+    amount_cents: z.number().int().positive(),
+    merchant: z.string().max(120).optional(),
+    category_id: z.string().uuid().nullable().optional(),
+    payment_method: paymentMethodSchema.optional(),
+    date: z.string().min(10),
+    description: z.string().max(120).optional(),
+    account_id: z.string().uuid().nullable().optional(),
+    credit_card_id: z.string().uuid().nullable().optional(),
+    installment_total: z.coerce.number().int().min(1).max(48).optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (value.payment_method === "credit" && !value.credit_card_id) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["credit_card_id"],
+        message: "Escolha o cartão desta compra.",
+      });
+    }
+  });
 
 export type TransactionInput = z.infer<typeof transactionSchema>;
 export type TransactionFilter = z.infer<typeof transactionFilterSchema>;
