@@ -267,6 +267,15 @@ export async function createSubscriptionAction(formData: FormData) {
   return result;
 }
 
+export async function cancelSubscriptionAction(id: string) {
+  const parsed = resourceIdSchema.safeParse(id);
+  if (!parsed.success) return fail("VALIDATION_ERROR", "Assinatura inválida.");
+  const { supabase, userId } = await requireUser();
+  const result = await subscriptionService.cancel(supabase, userId, parsed.data);
+  if (result.success) revalidateFinance();
+  return result;
+}
+
 export async function updateProfileAction(formData: FormData) {
   const { supabase, userId } = await requireUser();
   const parsed = profileSchema.safeParse({

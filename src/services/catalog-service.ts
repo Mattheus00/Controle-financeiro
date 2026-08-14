@@ -217,6 +217,25 @@ export const subscriptionService = {
     if (error || !data) return fail("SUBSCRIPTION_CREATE_FAILED", "Não foi possível criar a assinatura.");
     return ok(data);
   },
+  async cancel(supabase: Client, userId: string, id: string) {
+    const { data, error } = await supabase
+      .from("subscriptions")
+      .update({ is_active: false })
+      .eq("id", id)
+      .eq("user_id", userId)
+      .eq("is_active", true)
+      .select("id, recurring_transaction_id")
+      .maybeSingle();
+    if (error || !data) return fail("SUBSCRIPTION_CANCEL_FAILED", "Não foi possível cancelar a assinatura.");
+    if (data.recurring_transaction_id) {
+      await supabase
+        .from("recurring_transactions")
+        .update({ is_active: false })
+        .eq("id", data.recurring_transaction_id)
+        .eq("user_id", userId);
+    }
+    return ok({ id: data.id });
+  },
 };
 
 export const profileService = {

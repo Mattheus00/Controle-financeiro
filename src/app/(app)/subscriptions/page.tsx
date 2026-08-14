@@ -5,6 +5,7 @@ import { MerchantLogo } from "@/components/merchant/MerchantLogo";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createSubscriptionAction } from "@/features/finance/actions";
+import { CancelSubscriptionButton } from "@/features/subscriptions/cancel-subscription-button";
 import { asFormAction } from "@/types";
 
 export default async function SubscriptionsPage() {
@@ -37,17 +38,22 @@ export default async function SubscriptionsPage() {
           {data.items.map((item) => {
             const category = item.category_id ? categoryMap.get(item.category_id) : undefined;
             return (
-              <li key={item.id} className="flex items-center gap-3 rounded-3xl bg-card px-4 py-3 ring-1 ring-border">
-                <MerchantLogo
-                  merchantName={item.merchant || item.name}
-                  category={category?.slug}
-                  categoryIcon={item.icon || category?.icon}
-                />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium">{item.name}</p>
-                  <p className="text-xs text-muted-foreground">Todo dia {item.billing_day}</p>
+              <li key={item.id} className="flex flex-col gap-3 rounded-3xl bg-card px-4 py-3 ring-1 ring-border sm:flex-row sm:items-center">
+                <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <MerchantLogo
+                    merchantName={item.merchant || item.name}
+                    category={category?.slug}
+                    categoryIcon={item.icon || category?.icon}
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium">{item.name}</p>
+                    <p className="text-xs text-muted-foreground">Todo dia {item.billing_day}</p>
+                  </div>
                 </div>
-                <MoneyText cents={item.amount_cents} className="text-lg" />
+                <div className="flex items-center justify-between gap-2 sm:justify-end">
+                  <MoneyText cents={item.amount_cents} className="text-lg" />
+                  <CancelSubscriptionButton id={item.id} name={item.name} />
+                </div>
               </li>
             );
           })}
