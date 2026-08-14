@@ -8,7 +8,13 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { Field } from "@/components/ui-kit";
 import { forgotPasswordAction, signInAction, signUpAction } from "@/features/auth/actions";
 
-export function LoginForm() {
+export function LoginForm({
+  confirmed,
+  confirmError,
+}: {
+  confirmed?: boolean;
+  confirmError?: boolean;
+}) {
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
@@ -25,6 +31,16 @@ export function LoginForm() {
         });
       }}
     >
+      {confirmed ? (
+        <p className="rounded-2xl bg-secondary p-4 text-sm">
+          E-mail confirmado. Agora você já pode entrar.
+        </p>
+      ) : null}
+      {confirmError ? (
+        <p className="text-sm text-danger">
+          Não foi possível confirmar o e-mail. O link pode ter expirado. Peça outro e-mail na tela de cadastro.
+        </p>
+      ) : null}
       <Field label="E-mail" htmlFor="email">
         <Input id="email" name="email" type="email" autoComplete="email" required className="h-11" />
       </Field>
@@ -50,15 +66,6 @@ export function LoginForm() {
 export function SignUpForm() {
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState(false);
-
-  if (done) {
-    return (
-      <p className="rounded-2xl bg-secondary p-4 text-sm">
-        Conta criada. Se o projeto exigir confirmação, olhe seu e-mail. Depois disso, é só entrar.
-      </p>
-    );
-  }
 
   return (
     <form
@@ -69,11 +76,7 @@ export function SignUpForm() {
         setError(null);
         start(async () => {
           const result = await signUpAction(formData);
-          if (!result.success) {
-            setError(result.error.message);
-            return;
-          }
-          setDone(true);
+          if (result && !result.success) setError(result.error.message);
         });
       }}
     >

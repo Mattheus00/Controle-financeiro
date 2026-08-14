@@ -48,6 +48,9 @@ const nextConfig: NextConfig = {
       { source: "/terms", destination: "/termos", permanent: false },
     ];
   },
+  async rewrites() {
+    return [{ source: "/icons/:path*", destination: "/folio-icon-pack-v2/:path*" }];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

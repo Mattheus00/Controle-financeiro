@@ -11,6 +11,7 @@ type Tx = {
   type: string;
   date: string;
   merchant: string | null;
+  description: string;
   category_id: string | null;
   categories: { name: string; slug: string; color: string; icon: string } | null;
 };
@@ -32,7 +33,7 @@ export const analyticsService = {
         supabase.from("accounts").select("initial_balance_cents").eq("user_id", userId).eq("is_archived", false),
         supabase
           .from("transactions")
-          .select("amount_cents, type, date, merchant, category_id, categories(name, slug, color, icon)")
+          .select("amount_cents, type, date, merchant, description, category_id, categories(name, slug, color, icon)")
           .eq("user_id", userId)
           .or("installment_total.is.null,parent_transaction_id.not.is.null")
           .gte("date", from < lastMonth ? from : lastMonth)
@@ -90,6 +91,17 @@ export const analyticsService = {
     }
 
     const chart = buildChart(periodTx, from, to);
+    const recent = [...periodTx]
+      .sort((a, b) => b.date.localeCompare(a.date))
+      .slice(0, 8)
+      .map((row) => ({
+        date: row.date,
+        type: row.type,
+        amount_cents: row.amount_cents,
+        merchant: row.merchant || row.description,
+        categorySlug: row.categories?.slug ?? null,
+        categoryName: row.categories?.name ?? null,
+      }));
 
     return {
       currentBalance,
@@ -102,6 +114,7 @@ export const analyticsService = {
       incomeChange: percentChange(incomeMonth, incomePrev),
       expenseChange: percentChange(expenseMonth, expensePrev),
       categories: [...categoryMap.values()].sort((a, b) => b.amount - a.amount),
+      recent,
       chart,
       period,
       forecast: {

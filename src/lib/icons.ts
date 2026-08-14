@@ -71,3 +71,6 @@ export function resolveEntityIcon(input: {
   if (fromMerchant) return fromMerchant;
   return input.categoryIcon ?? null;
 }
+
+export { getMerchantIcon, fallbackMerchantIcon, merchantDisplayName } from "@/lib/icons/get-merchant-icon";
+export type { MerchantIconMatch, MerchantIconType } from "@/lib/icons/merchant-icon-types";

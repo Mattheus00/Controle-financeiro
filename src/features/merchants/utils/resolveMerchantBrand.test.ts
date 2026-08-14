@@ -61,7 +61,7 @@ describe("resolveMerchantBrand", () => {
   });
 
   it("falls back when a brand logo URL fails to load", () => {
-    const brand = resolveMerchantBrand({ merchantName: "Netflix" }, TEST_CATALOG);
+    const brand = resolveMerchantBrand({ merchantName: "Netflix", categorySlug: "assinaturas" }, TEST_CATALOG);
     const next = fallbackAfterLogoError(brand);
     expect(next.type).toBe("category");
     if (next.type === "category") expect(next.icon).toBe("RefreshCw");

@@ -42,7 +42,7 @@ export async function signUpAction(formData: FormData) {
   const limited = await enforceRateLimit(supabase, "signup", parsed.data.email);
   if (limited) return limited;
   const origin = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-  const { error } = await supabase.auth.signUp({
+  const { data, error } = await supabase.auth.signUp({
     email: parsed.data.email,
     password: parsed.data.password,
     options: {
@@ -54,8 +54,15 @@ export async function signUpAction(formData: FormData) {
       emailRedirectTo: `${origin}/auth/callback`,
     },
   });
-  if (error) return fail("SIGNUP_FAILED", "Não foi possível criar a conta. Tente outro e-mail.");
-  return ok({ needsConfirmation: true });
+  if (error && !data.user) return fail("SIGNUP_FAILED", "Não foi possível criar a conta. Tente outro e-mail.");
+  if (data.session) redirect("/dashboard");
+
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: parsed.data.email,
+    password: parsed.data.password,
+  });
+  if (signInError) return fail("SIGNUP_FAILED", "Conta criada. Entre com o mesmo e-mail e senha.");
+  redirect("/dashboard");
 }
 
 export async function signOutAction() {

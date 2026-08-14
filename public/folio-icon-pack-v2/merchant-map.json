@@ -1,0 +1,501 @@
+{
+  "nubank": {
+    "icon": "brands/nubank.svg",
+    "aliases": [
+      "nubank",
+      "nu pagamentos",
+      "nu pagamento",
+      "nubank pagamentos"
+    ]
+  },
+  "spotify": {
+    "icon": "brands/spotify.svg",
+    "aliases": [
+      "spotify",
+      "spotify premium"
+    ]
+  },
+  "netflix": {
+    "icon": "brands/netflix.svg",
+    "aliases": [
+      "netflix",
+      "netflix.com"
+    ]
+  },
+  "uber": {
+    "icon": "brands/uber.svg",
+    "aliases": [
+      "uber",
+      "uber trip",
+      "uber *trip",
+      "uber do brasil"
+    ]
+  },
+  "paypal": {
+    "icon": "brands/paypal.svg",
+    "aliases": [
+      "paypal",
+      "paypal *"
+    ]
+  },
+  "mastercard": {
+    "icon": "brands/mastercard.svg",
+    "aliases": [
+      "mastercard"
+    ]
+  },
+  "visa": {
+    "icon": "brands/visa.svg",
+    "aliases": [
+      "visa"
+    ]
+  },
+  "youtube": {
+    "icon": "brands/youtube.svg",
+    "aliases": [
+      "youtube",
+      "youtube premium"
+    ]
+  },
+  "apple": {
+    "icon": "brands/apple.svg",
+    "aliases": [
+      "apple",
+      "apple.com/bill",
+      "itunes.com/bill",
+      "app store"
+    ]
+  },
+  "google": {
+    "icon": "brands/google.svg",
+    "aliases": [
+      "google",
+      "google *",
+      "google one",
+      "google play"
+    ]
+  },
+  "itau": {
+    "icon": "merchant-fallbacks/itau.svg",
+    "aliases": [
+      "itau",
+      "itau"
+    ]
+  },
+  "bradesco": {
+    "icon": "merchant-fallbacks/bradesco.svg",
+    "aliases": [
+      "bradesco",
+      "bradesco"
+    ]
+  },
+  "santander": {
+    "icon": "merchant-fallbacks/santander.svg",
+    "aliases": [
+      "santander",
+      "santander"
+    ]
+  },
+  "banco-do-brasil": {
+    "icon": "merchant-fallbacks/banco-do-brasil.svg",
+    "aliases": [
+      "banco do brasil",
+      "banco-do-brasil"
+    ]
+  },
+  "caixa": {
+    "icon": "merchant-fallbacks/caixa.svg",
+    "aliases": [
+      "caixa",
+      "caixa"
+    ]
+  },
+  "inter": {
+    "icon": "merchant-fallbacks/inter.svg",
+    "aliases": [
+      "inter",
+      "inter"
+    ]
+  },
+  "c6-bank": {
+    "icon": "merchant-fallbacks/c6-bank.svg",
+    "aliases": [
+      "c6 bank",
+      "c6-bank",
+      "c6bank",
+      "c6"
+    ]
+  },
+  "mercado-pago": {
+    "icon": "merchant-fallbacks/mercado-pago.svg",
+    "aliases": [
+      "mercado pago",
+      "mercado-pago"
+    ]
+  },
+  "picpay": {
+    "icon": "merchant-fallbacks/picpay.svg",
+    "aliases": [
+      "picpay",
+      "picpay"
+    ]
+  },
+  "pagbank": {
+    "icon": "merchant-fallbacks/pagbank.svg",
+    "aliases": [
+      "pagbank",
+      "pagbank"
+    ]
+  },
+  "stone": {
+    "icon": "merchant-fallbacks/stone.svg",
+    "aliases": [
+      "stone",
+      "stone"
+    ]
+  },
+  "wise": {
+    "icon": "merchant-fallbacks/wise.svg",
+    "aliases": [
+      "wise",
+      "wise"
+    ]
+  },
+  "ifood": {
+    "icon": "merchant-fallbacks/ifood.svg",
+    "aliases": [
+      "ifood",
+      "ifood"
+    ]
+  },
+  "rappi": {
+    "icon": "merchant-fallbacks/rappi.svg",
+    "aliases": [
+      "rappi",
+      "rappi"
+    ]
+  },
+  "99": {
+    "icon": "merchant-fallbacks/99.svg",
+    "aliases": [
+      "99",
+      "99"
+    ]
+  },
+  "amazon": {
+    "icon": "merchant-fallbacks/amazon.svg",
+    "aliases": [
+      "amazon",
+      "amazon"
+    ]
+  },
+  "shopee": {
+    "icon": "merchant-fallbacks/shopee.svg",
+    "aliases": [
+      "shopee",
+      "shopee"
+    ]
+  },
+  "aliexpress": {
+    "icon": "merchant-fallbacks/aliexpress.svg",
+    "aliases": [
+      "aliexpress",
+      "aliexpress"
+    ]
+  },
+  "mercado-livre": {
+    "icon": "merchant-fallbacks/mercado-livre.svg",
+    "aliases": [
+      "mercado livre",
+      "mercado-livre"
+    ]
+  },
+  "magalu": {
+    "icon": "merchant-fallbacks/magalu.svg",
+    "aliases": [
+      "magalu",
+      "magalu"
+    ]
+  },
+  "americanas": {
+    "icon": "merchant-fallbacks/americanas.svg",
+    "aliases": [
+      "americanas",
+      "americanas"
+    ]
+  },
+  "carrefour": {
+    "icon": "merchant-fallbacks/carrefour.svg",
+    "aliases": [
+      "carrefour",
+      "carrefour"
+    ]
+  },
+  "pao-de-acucar": {
+    "icon": "merchant-fallbacks/pao-de-acucar.svg",
+    "aliases": [
+      "pao de acucar",
+      "pao-de-acucar"
+    ]
+  },
+  "assai": {
+    "icon": "merchant-fallbacks/assai.svg",
+    "aliases": [
+      "assai",
+      "assai"
+    ]
+  },
+  "atacadao": {
+    "icon": "merchant-fallbacks/atacadao.svg",
+    "aliases": [
+      "atacadao",
+      "atacadao"
+    ]
+  },
+  "uber-eats": {
+    "icon": "merchant-fallbacks/uber-eats.svg",
+    "aliases": [
+      "uber eats",
+      "uber-eats"
+    ]
+  },
+  "airbnb": {
+    "icon": "merchant-fallbacks/airbnb.svg",
+    "aliases": [
+      "airbnb",
+      "airbnb"
+    ]
+  },
+  "booking": {
+    "icon": "merchant-fallbacks/booking.svg",
+    "aliases": [
+      "booking",
+      "booking"
+    ]
+  },
+  "disney-plus": {
+    "icon": "merchant-fallbacks/disney-plus.svg",
+    "aliases": [
+      "disney plus",
+      "disney-plus"
+    ]
+  },
+  "prime-video": {
+    "icon": "merchant-fallbacks/prime-video.svg",
+    "aliases": [
+      "prime video",
+      "prime-video"
+    ]
+  },
+  "max": {
+    "icon": "merchant-fallbacks/max.svg",
+    "aliases": [
+      "max",
+      "max"
+    ]
+  },
+  "globoplay": {
+    "icon": "merchant-fallbacks/globoplay.svg",
+    "aliases": [
+      "globoplay",
+      "globoplay"
+    ]
+  },
+  "deezer": {
+    "icon": "merchant-fallbacks/deezer.svg",
+    "aliases": [
+      "deezer",
+      "deezer"
+    ]
+  },
+  "youtube-music": {
+    "icon": "merchant-fallbacks/youtube-music.svg",
+    "aliases": [
+      "youtube music",
+      "youtube-music"
+    ]
+  },
+  "icloud": {
+    "icon": "merchant-fallbacks/icloud.svg",
+    "aliases": [
+      "icloud",
+      "icloud.com"
+    ]
+  },
+  "chatgpt": {
+    "icon": "merchant-fallbacks/chatgpt.svg",
+    "aliases": [
+      "chatgpt",
+      "chat gpt",
+      "openai"
+    ]
+  },
+  "microsoft-365": {
+    "icon": "merchant-fallbacks/microsoft-365.svg",
+    "aliases": [
+      "microsoft 365",
+      "microsoft-365"
+    ]
+  },
+  "dropbox": {
+    "icon": "merchant-fallbacks/dropbox.svg",
+    "aliases": [
+      "dropbox",
+      "dropbox"
+    ]
+  },
+  "notion": {
+    "icon": "merchant-fallbacks/notion.svg",
+    "aliases": [
+      "notion",
+      "notion"
+    ]
+  },
+  "canva": {
+    "icon": "merchant-fallbacks/canva.svg",
+    "aliases": [
+      "canva",
+      "canva"
+    ]
+  },
+  "adobe": {
+    "icon": "merchant-fallbacks/adobe.svg",
+    "aliases": [
+      "adobe",
+      "adobe"
+    ]
+  },
+  "github": {
+    "icon": "merchant-fallbacks/github.svg",
+    "aliases": [
+      "github",
+      "github"
+    ]
+  },
+  "steam": {
+    "icon": "merchant-fallbacks/steam.svg",
+    "aliases": [
+      "steam",
+      "steam"
+    ]
+  },
+  "playstation": {
+    "icon": "merchant-fallbacks/playstation.svg",
+    "aliases": [
+      "playstation",
+      "playstation"
+    ]
+  },
+  "xbox": {
+    "icon": "merchant-fallbacks/xbox.svg",
+    "aliases": [
+      "xbox",
+      "xbox"
+    ]
+  },
+  "nintendo": {
+    "icon": "merchant-fallbacks/nintendo.svg",
+    "aliases": [
+      "nintendo",
+      "nintendo"
+    ]
+  },
+  "epic-games": {
+    "icon": "merchant-fallbacks/epic-games.svg",
+    "aliases": [
+      "epic games",
+      "epic-games"
+    ]
+  },
+  "smart-fit": {
+    "icon": "merchant-fallbacks/smart-fit.svg",
+    "aliases": [
+      "smart fit",
+      "smart-fit"
+    ]
+  },
+  "wellhub": {
+    "icon": "merchant-fallbacks/wellhub.svg",
+    "aliases": [
+      "wellhub",
+      "wellhub"
+    ]
+  },
+  "bluefit": {
+    "icon": "merchant-fallbacks/bluefit.svg",
+    "aliases": [
+      "bluefit",
+      "bluefit"
+    ]
+  },
+  "localiza": {
+    "icon": "merchant-fallbacks/localiza.svg",
+    "aliases": [
+      "localiza",
+      "localiza"
+    ]
+  },
+  "movida": {
+    "icon": "merchant-fallbacks/movida.svg",
+    "aliases": [
+      "movida",
+      "movida"
+    ]
+  },
+  "shell": {
+    "icon": "merchant-fallbacks/shell.svg",
+    "aliases": [
+      "shell",
+      "shell"
+    ]
+  },
+  "petrobras": {
+    "icon": "merchant-fallbacks/petrobras.svg",
+    "aliases": [
+      "petrobras",
+      "petrobras"
+    ]
+  },
+  "ipiranga": {
+    "icon": "merchant-fallbacks/ipiranga.svg",
+    "aliases": [
+      "ipiranga",
+      "ipiranga"
+    ]
+  },
+  "claro": {
+    "icon": "merchant-fallbacks/claro.svg",
+    "aliases": [
+      "claro",
+      "claro"
+    ]
+  },
+  "vivo": {
+    "icon": "merchant-fallbacks/vivo.svg",
+    "aliases": [
+      "vivo",
+      "vivo"
+    ]
+  },
+  "tim": {
+    "icon": "merchant-fallbacks/tim.svg",
+    "aliases": [
+      "tim",
+      "tim"
+    ]
+  },
+  "oi": {
+    "icon": "merchant-fallbacks/oi.svg",
+    "aliases": [
+      "oi",
+      "oi"
+    ]
+  },
+  "net-claro": {
+    "icon": "merchant-fallbacks/net-claro.svg",
+    "aliases": [
+      "net claro",
+      "net-claro"
+    ]
+  }
+}

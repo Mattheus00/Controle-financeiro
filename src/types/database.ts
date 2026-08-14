@@ -567,6 +567,18 @@ export type Database = {
         Args: { p_key: string; p_max: number; p_window_seconds: number };
         Returns: boolean;
       };
+      issue_email_confirmation: {
+        Args: { p_user_id: string; p_token_hash: string; p_secret: string };
+        Returns: boolean;
+      };
+      issue_email_confirmation_for_email: {
+        Args: { p_email: string; p_token_hash: string; p_secret: string };
+        Returns: boolean;
+      };
+      confirm_email_with_token: {
+        Args: { p_token: string };
+        Returns: boolean;
+      };
       write_audit_event: {
         Args: { p_event_type: string; p_metadata?: Json };
         Returns: undefined;

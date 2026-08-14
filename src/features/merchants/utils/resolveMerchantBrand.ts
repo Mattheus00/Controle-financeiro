@@ -2,6 +2,7 @@ import type { MerchantBrand, MerchantCatalog, MerchantResolution, ResolveMerchan
 import { iconForCategorySlug } from "@/lib/categoryIconMap";
 import { getMerchantInitials } from "@/features/merchants/utils/getMerchantInitials";
 import { normalizeMerchantName, preserveOriginalName } from "@/features/merchants/utils/normalizeMerchantName";
+import { getMerchantIcon, merchantDisplayName } from "@/lib/icons/get-merchant-icon";
 
 const SHORT_ALIASES = new Set(["99"]);
 
@@ -20,11 +21,7 @@ export function brandLogoUrl(logoPath: string | null | undefined): string | null
   if (logoPath.startsWith("http://") || logoPath.startsWith("https://") || logoPath.startsWith("/")) {
     return logoPath;
   }
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  if (supabaseUrl) {
-    return `${supabaseUrl}/storage/v1/object/public/brand-assets/${logoPath.replace(/^brands\//, "")}`;
-  }
-  return `/brands/${logoPath.replace(/^brands\//, "")}`;
+  return `/icons/${logoPath.replace(/^\/+/, "")}`;
 }
 
 function brandResult(brand: MerchantBrand): MerchantResolution {
@@ -85,6 +82,20 @@ export function resolveMerchantBrand(
     }
   }
 
+  const local = getMerchantIcon(input.merchantName ?? "", input.categorySlug ?? undefined);
+  if (local.type === "brand" || local.type === "merchant-fallback") {
+    return {
+      type: "brand",
+      merchantId: local.matchedMerchant ?? "",
+      name: merchantDisplayName(local.matchedMerchant ?? "") || original,
+      slug: local.matchedMerchant ?? "",
+      logoUrl: local.icon,
+      icon: local.lucideIcon ?? iconForCategorySlug(input.categorySlug),
+      backgroundColor: null,
+      foregroundColor: null,
+    };
+  }
+
   if (normalized) {
     const exact = catalog.brands.find((brand) => {
       if (!brand.is_active) return false;
@@ -105,6 +116,16 @@ export function resolveMerchantBrand(
     for (const entry of ranked) {
       if (hasBoundedAlias(normalized, entry.alias)) return brandResult(entry.brand);
     }
+  }
+
+  if (local.lucideIcon) {
+    return {
+      type: "category",
+      merchantId: null,
+      name: original,
+      logoUrl: null,
+      icon: local.lucideIcon,
+    };
   }
 
   return fallbackResolution(original, input.categorySlug, input.categoryIcon);

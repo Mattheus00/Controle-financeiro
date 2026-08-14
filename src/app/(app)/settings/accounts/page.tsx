@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { createAccountAction } from "@/features/finance/actions";
 import { SettingsSubpage } from "@/features/profile/settings-subpage";
+import { MerchantIcon } from "@/components/merchant/MerchantIcon";
 import { MerchantLogo } from "@/components/merchant/MerchantLogo";
 import { asFormAction } from "@/types";
 
@@ -28,7 +29,10 @@ export default async function AccountsSettingsPage() {
           <ul className="mt-3 space-y-2 text-sm">
             {accs.map((account) => (
               <li key={account.id} className="flex items-start justify-between gap-3 rounded-2xl bg-muted px-3 py-2">
-                <span className="min-w-0 break-words">{account.name}</span>
+                <span className="flex min-w-0 items-center gap-3">
+                  <MerchantIcon name={account.name} category="banco" size="sm" />
+                  <span className="min-w-0 break-words">{account.name}</span>
+                </span>
                 <span className="shrink-0 text-muted-foreground">{account.type}</span>
               </li>
             ))}

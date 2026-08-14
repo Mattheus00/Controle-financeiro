@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { EmptyState, MoneyText } from "@/components/ui-kit";
 import { EntityIcon } from "@/components/icons/entity-icon";
+import { MerchantIcon } from "@/components/merchant/MerchantIcon";
 import { PeriodPills } from "@/features/dashboard/period-pills";
 import { FlowChart } from "@/features/dashboard/flow-chart";
 import { requireUser } from "@/lib/supabase/auth";
@@ -111,6 +112,34 @@ export default async function DashboardPage({
           </CardContent>
         </Card>
       </div>
+
+      <Card className="rounded-3xl">
+        <CardHeader>
+          <CardTitle>Movimentações recentes</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          {data.recent.length === 0 ? (
+            <EmptyState
+              title="Nenhuma movimentação ainda."
+              description="Quando você lançar gastos, eles aparecem aqui."
+            />
+          ) : (
+            data.recent.map((row, index) => (
+              <div key={`${row.date}-${row.merchant}-${index}`} className="flex items-center gap-3">
+                <MerchantIcon name={row.merchant} category={row.categorySlug ?? row.categoryName ?? undefined} />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium">{row.merchant}</p>
+                </div>
+                <MoneyText
+                  cents={row.type === "income" ? row.amount_cents : -row.amount_cents}
+                  className="text-base"
+                  tone={row.type === "income" ? "success" : "default"}
+                />
+              </div>
+            ))
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
