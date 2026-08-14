@@ -276,7 +276,11 @@ export async function updateProfileAction(formData: FormData) {
   });
   if (!parsed.success) return fail("VALIDATION_ERROR", "Revise o perfil.");
   const result = await profileService.update(supabase, userId, parsed.data);
-  if (result.success) revalidatePath("/settings");
+  if (result.success) {
+    revalidatePath("/settings");
+    revalidatePath("/settings/edit");
+    revalidatePath("/settings/preferences");
+  }
   return result;
 }
 
