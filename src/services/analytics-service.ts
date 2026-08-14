@@ -1,5 +1,10 @@
 import { monthStartISO, previousMonthStartISO, rangeForPeriod, todayISO } from "@/lib/date";
 import { percentChange } from "@/lib/money";
+import {
+  projectedSubscriptionExpenses,
+  upcomingSubscriptionTotal,
+  type SubscriptionExpenseInput,
+} from "@/lib/subscription-expenses";
 import type { ChartPeriod, Insight } from "@/types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
@@ -46,7 +51,7 @@ export const analyticsService = {
           .gte("due_date", today),
         supabase
           .from("subscriptions")
-          .select("amount_cents")
+          .select("amount_cents, billing_day, name, merchant, created_at, category_id, categories(name, slug, color, icon)")
           .eq("user_id", userId)
           .eq("is_active", true),
       ]);
@@ -62,35 +67,65 @@ export const analyticsService = {
       rows.filter((row) => row.type === type).reduce((sum, row) => sum + row.amount_cents, 0);
 
     const incomeMonth = sumBy(monthTx, "income");
-    const expenseMonth = sumBy(monthTx, "expense");
     const incomePrev = sumBy(prevTx, "income");
-    const expensePrev = sumBy(prevTx, "expense");
+    const expenseMonthTx = sumBy(monthTx, "expense");
+    const expensePrevTx = sumBy(prevTx, "expense");
     const incomeAll = sumBy(txs, "income");
     const expenseAll = sumBy(txs, "expense");
 
     const currentBalance = opening + incomeAll - expenseAll;
-    const lastBalance = opening + incomePrev - expensePrev + (incomeAll - incomeMonth) - (expenseAll - expenseMonth);
+    const lastBalance = opening + incomePrev - expensePrevTx + (incomeAll - incomeMonth) - (expenseAll - expenseMonthTx);
     const upcomingBills = (bills ?? []).reduce((sum, bill) => sum + bill.amount_cents, 0);
-    const subscriptionsMonth = (subscriptions ?? []).reduce((sum, item) => sum + item.amount_cents, 0);
+    const activeSubscriptions = (subscriptions ?? []) as unknown as SubscriptionExpenseInput[];
+    const subscriptionsMonth = activeSubscriptions.reduce((sum, item) => sum + item.amount_cents, 0);
+    const projectedSubs = projectedSubscriptionExpenses(activeSubscriptions, txs, from, to);
+    const thisMonthSubs = projectedSubscriptionExpenses(activeSubscriptions, txs, thisMonth, today);
+    const prevMonthEnd = new Date(`${thisMonth}T12:00:00`);
+    prevMonthEnd.setDate(prevMonthEnd.getDate() - 1);
+    const prevMonthSubs = projectedSubscriptionExpenses(
+      activeSubscriptions,
+      txs,
+      lastMonth,
+      prevMonthEnd.toISOString().slice(0, 10),
+    );
+    const expenseMonth = expenseMonthTx + thisMonthSubs.reduce((sum, item) => sum + item.amount_cents, 0);
+    const expensePrev = expensePrevTx + prevMonthSubs.reduce((sum, item) => sum + item.amount_cents, 0);
+
+    const chartRows: Tx[] = [
+      ...periodTx,
+      ...projectedSubs.map((item) => ({
+        amount_cents: item.amount_cents,
+        type: "expense",
+        date: item.date,
+        merchant: item.name,
+        description: item.name,
+        category_id: null,
+        categories: item.category,
+      })),
+    ];
+
+    const horizon = new Date(`${today}T12:00:00`);
+    horizon.setDate(horizon.getDate() + 30);
+    const upcomingSubs = upcomingSubscriptionTotal(
+      activeSubscriptions,
+      txs,
+      today,
+      horizon.toISOString().slice(0, 10),
+    );
+    const expectedExpenses = upcomingBills + upcomingSubs;
 
     const categoryMap = new Map<
       string,
       { name: string; slug: string; color: string; icon: string; amount: number }
     >();
     for (const row of monthTx.filter((item) => item.type === "expense")) {
-      const key = row.categories?.slug ?? "outros";
-      const current = categoryMap.get(key) ?? {
-        name: row.categories?.name ?? "Outros",
-        slug: key,
-        color: row.categories?.color ?? "#94A3B8",
-        icon: row.categories?.icon ?? "CircleDot",
-        amount: 0,
-      };
-      current.amount += row.amount_cents;
-      categoryMap.set(key, current);
+      addCategory(categoryMap, row.categories, row.amount_cents);
+    }
+    for (const item of thisMonthSubs) {
+      addCategory(categoryMap, item.category, item.amount_cents);
     }
 
-    const chart = buildChart(periodTx, from, to);
+    const chart = buildChart(chartRows, from, to);
     const recent = [...periodTx]
       .sort((a, b) => b.date.localeCompare(a.date))
       .slice(0, 8)
@@ -120,8 +155,8 @@ export const analyticsService = {
       forecast: {
         currentBalance,
         expectedIncome: incomeMonth,
-        expectedExpenses: upcomingBills,
-        projected: currentBalance - upcomingBills,
+        expectedExpenses,
+        projected: currentBalance - expectedExpenses,
       },
       expensePrev,
     };
@@ -185,6 +220,23 @@ export const analyticsService = {
 
 function formatInsightMoney(cents: number) {
   return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(cents / 100);
+}
+
+function addCategory(
+  categoryMap: Map<string, { name: string; slug: string; color: string; icon: string; amount: number }>,
+  category: { name: string; slug: string; color: string; icon: string } | null | undefined,
+  amount: number,
+) {
+  const key = category?.slug ?? "outros";
+  const current = categoryMap.get(key) ?? {
+    name: category?.name ?? "Outros",
+    slug: key,
+    color: category?.color ?? "#94A3B8",
+    icon: category?.icon ?? "CircleDot",
+    amount: 0,
+  };
+  current.amount += amount;
+  categoryMap.set(key, current);
 }
 
 function buildChart(rows: Tx[], from: string, to: string) {
