@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Field } from "@/components/ui-kit";
 import { forgotPasswordAction, signInAction, signUpAction } from "@/features/auth/actions";
+import { LockKeyhole, Mail } from "lucide-react";
 
 export function LoginForm({
   confirmed,
@@ -20,7 +21,7 @@ export function LoginForm({
 
   return (
     <form
-      className="space-y-4"
+      className="space-y-5"
       onSubmit={(event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
@@ -42,20 +43,42 @@ export function LoginForm({
         </p>
       ) : null}
       <Field label="E-mail" htmlFor="email">
-        <Input id="email" name="email" type="email" autoComplete="email" required className="h-11" />
+        <div className="relative">
+          <Mail className="pointer-events-none absolute top-1/2 left-4 z-10 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            placeholder="seu@email.com"
+            required
+            className="h-12 rounded-xl bg-background/40 pl-11"
+          />
+        </div>
       </Field>
       <Field label="Senha" htmlFor="password">
-        <PasswordInput id="password" name="password" autoComplete="current-password" required className="h-11" />
+        <div className="relative">
+          <LockKeyhole className="pointer-events-none absolute top-1/2 left-4 z-10 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
+          <PasswordInput
+            id="password"
+            name="password"
+            autoComplete="current-password"
+            placeholder="Digite sua senha"
+            required
+            className="h-12 rounded-xl bg-background/40 pr-12 pl-11"
+          />
+        </div>
       </Field>
       {error ? <p className="text-sm text-danger">{error}</p> : null}
-      <Button type="submit" disabled={pending} className="h-11 w-full rounded-2xl">
+      <Button type="submit" disabled={pending} className="h-12 w-full rounded-xl text-sm font-semibold shadow-[0_10px_30px_rgba(143,198,55,0.18)]">
         {pending ? "Entrando..." : "Entrar"}
       </Button>
-      <div className="flex flex-wrap justify-between gap-3 text-sm">
-        <Link href="/forgot-password" className="text-muted-foreground hover:text-foreground">
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 pt-1 text-sm">
+        <Link href="/forgot-password" className="text-center font-medium text-[#507823] transition-colors hover:text-foreground">
           Esqueci a senha
         </Link>
-        <Link href="/signup" className="font-medium hover:underline">
+        <span className="h-7 w-px bg-border" aria-hidden />
+        <Link href="/signup" className="text-center font-medium text-[#507823] transition-colors hover:text-foreground">
           Criar conta
         </Link>
       </div>
